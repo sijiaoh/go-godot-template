@@ -9,15 +9,15 @@ import (
 	"testing"
 
 	"github.com/sijiaoh/go-godot-template/api_server/controllers"
-	"github.com/sijiaoh/go-godot-template/api_server/repositories"
-	"github.com/sijiaoh/go-godot-template/api_server/routes"
 	"github.com/sijiaoh/go-godot-template/api_server/testutils"
 )
 
 func TestCreateUser(t *testing.T) {
-	entClient := repositories.NewEntClient()
-	defer entClient.Close()
-	router := routes.NewRouter(entClient)
+	testServer := testutils.NewTestServer()
+	defer testServer.Close()
+
+	entClient := testServer.EntClient
+	router := testServer.Router
 
 	params := controllers.CreateUserParams{
 		Name: "Foo",
@@ -37,9 +37,11 @@ func TestCreateUser(t *testing.T) {
 }
 
 func TestCreateUser_BadRequest(t *testing.T) {
-	entClient := repositories.NewEntClient()
-	defer entClient.Close()
-	router := routes.NewRouter(entClient)
+	testServer := testutils.NewTestServer()
+	defer testServer.Close()
+
+	entClient := testServer.EntClient
+	router := testServer.Router
 
 	body := bytes.NewBuffer([]byte("invalid json"))
 	request := httptest.NewRequest(http.MethodPost, "/users", body)
