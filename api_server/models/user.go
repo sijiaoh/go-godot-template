@@ -13,21 +13,21 @@ type User struct {
 	entUser *ent.User
 }
 
-func FromEnt(entUser *ent.User) User {
-	return User{
+func NewUserFromEnt(entUser *ent.User) *User {
+	return &User{
 		ID:      entUser.ID,
 		Name:    entUser.Name,
 		entUser: entUser,
 	}
 }
 
-func (u *User) ApplyUpdate(deps utils.Deps) error {
+func (u *User) ApplyUpdate(deps *utils.Deps) error {
 	if u.entUser == nil {
 		return errors.New("user.entUser is nil")
 	}
 
 	update := deps.EntClient.User.UpdateOne(u.entUser)
-	if utils.StrPtrEq(u.Name, u.entUser.Name) {
+	if !utils.StrPtrEq(u.Name, u.entUser.Name) {
 		if u.Name != nil {
 			update.SetName(*u.Name)
 		} else {
