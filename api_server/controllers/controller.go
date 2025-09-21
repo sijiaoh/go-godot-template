@@ -1,6 +1,12 @@
 package controllers
 
-import "github.com/sijiaoh/go-godot-template/api_server/ent"
+import (
+	"encoding/json"
+	"fmt"
+	"net/http"
+
+	"github.com/sijiaoh/go-godot-template/api_server/ent"
+)
 
 type Controller struct {
 	entClient *ent.Client
@@ -9,5 +15,20 @@ type Controller struct {
 func NewController(entClient *ent.Client) *Controller {
 	return &Controller{
 		entClient: entClient,
+	}
+}
+
+func (c *Controller) renderJson(w http.ResponseWriter, serializer interface{}) {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+
+	data, err := json.Marshal(serializer)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	_, err = w.Write(data)
+	if err != nil {
+		fmt.Println("failed to write response:", err)
 	}
 }

@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"github.com/sijiaoh/go-godot-template/api_server/controllers"
+	"github.com/sijiaoh/go-godot-template/api_server/serializers"
 	"github.com/sijiaoh/go-godot-template/api_server/testutils"
 )
 
@@ -22,11 +23,11 @@ func TestCreateUser(t *testing.T) {
 	params := controllers.CreateUserParams{
 		Name: "Foo",
 	}
-	json, err := json.Marshal(params)
+	data, err := json.Marshal(params)
 	if err != nil {
 		t.Fatal(err)
 	}
-	body := bytes.NewBuffer(json)
+	body := bytes.NewBuffer(data)
 	request := httptest.NewRequest(http.MethodPost, "/users", body)
 
 	response := httptest.NewRecorder()
@@ -34,6 +35,10 @@ func TestCreateUser(t *testing.T) {
 
 	testutils.AssertResponseCode(t, response.Code, http.StatusCreated)
 	testutils.AssertRecordCount(t, entClient.User.Query(), context.Background(), 1)
+
+	var res serializers.UserSerializer
+	json.Unmarshal(response.Body.Bytes(), &res)
+	testutils.AssertStrPtrEqual(t, res.Name, &params.Name)
 }
 
 func TestCreateUser_BadRequest(t *testing.T) {

@@ -3,6 +3,8 @@ package controllers
 import (
 	"net/http"
 
+	"github.com/sijiaoh/go-godot-template/api_server/models"
+	"github.com/sijiaoh/go-godot-template/api_server/serializers"
 	"github.com/sijiaoh/go-godot-template/api_server/utils"
 )
 
@@ -18,11 +20,14 @@ func (c *Controller) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = deps.EntClient.User.Create().SetName(params.Name).Save(deps.Ctx)
+	entUser, err := deps.EntClient.User.Create().SetName(params.Name).Save(deps.Ctx)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	w.WriteHeader(http.StatusCreated)
+	user := models.NewUserFromEnt(entUser)
+	serializer := serializers.NewUserSerializer(user)
+	c.renderJson(w, serializer)
 }
