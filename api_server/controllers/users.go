@@ -11,6 +11,8 @@ type CreateUserParams struct {
 }
 
 func (c *Controller) CreateUser(w http.ResponseWriter, r *http.Request) {
+	deps := utils.NewDeps(c.entClient, r.Context())
+
 	var params CreateUserParams
 	err := utils.ParseJsonBody(r.Body, &params)
 	if err != nil {
@@ -18,7 +20,7 @@ func (c *Controller) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = c.entClient.User.Create().SetName(params.Name).Save(r.Context())
+	_, err = deps.EntClient.User.Create().SetName(params.Name).Save(deps.Ctx)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

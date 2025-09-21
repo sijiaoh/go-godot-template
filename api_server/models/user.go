@@ -1,7 +1,6 @@
 package models
 
 import (
-	"context"
 	"errors"
 
 	"github.com/sijiaoh/go-godot-template/api_server/ent"
@@ -22,12 +21,12 @@ func FromEnt(entUser *ent.User) User {
 	}
 }
 
-func (u *User) ApplyUpdate(entClient *ent.Client, ctx context.Context) error {
+func (u *User) ApplyUpdate(deps utils.Deps) error {
 	if u.entUser == nil {
 		return errors.New("user.entUser is nil")
 	}
 
-	update := entClient.User.UpdateOne(u.entUser)
+	update := deps.EntClient.User.UpdateOne(u.entUser)
 	if utils.StrPtrEq(u.Name, u.entUser.Name) {
 		if u.Name != nil {
 			update.SetName(*u.Name)
@@ -36,7 +35,7 @@ func (u *User) ApplyUpdate(entClient *ent.Client, ctx context.Context) error {
 		}
 	}
 
-	entUser, err := update.Save(ctx)
+	entUser, err := update.Save(deps.Ctx)
 	if err != nil {
 		return err
 	}
