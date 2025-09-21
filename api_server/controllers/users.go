@@ -13,10 +13,8 @@ type CreateUserParams struct {
 func (c *Controller) CreateUser(w http.ResponseWriter, r *http.Request) {
 	deps := utils.NewDeps(c.entClient, r.Context())
 
-	var params CreateUserParams
-	err := utils.ParseJsonBody(r.Body, &params)
+	params, err := utils.ParseJsonBody[CreateUserParams](w, r.Body)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 

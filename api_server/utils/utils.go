@@ -3,6 +3,7 @@ package utils
 import (
 	"encoding/json"
 	"io"
+	"net/http"
 )
 
 func StrPtrEq(a, b *string) bool {
@@ -15,8 +16,15 @@ func StrPtrEq(a, b *string) bool {
 	return *a == *b
 }
 
-func ParseJsonBody(body io.ReadCloser, v interface{}) error {
+func ParseJsonBody[T any](w http.ResponseWriter, body io.ReadCloser) (*T, error) {
 	decoder := json.NewDecoder(body)
 	decoder.DisallowUnknownFields()
-	return decoder.Decode(v)
+
+	var v T
+	err := decoder.Decode(&v)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+	}
+
+	return &v, err
 }
