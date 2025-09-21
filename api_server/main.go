@@ -4,12 +4,13 @@ import (
 	"net/http"
 
 	"github.com/sijiaoh/go-godot-template/api_server/config"
+	"github.com/sijiaoh/go-godot-template/api_server/routes"
 )
 
 func main() {
 	entClient := config.NewEntClient()
 	defer entClient.Close()
 
-	router := config.NewRouter(entClient)
+	router := routes.NewRouter(entClient)
 	http.ListenAndServe(":3000", router)
 }
