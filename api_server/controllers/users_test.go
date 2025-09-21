@@ -8,14 +8,14 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/sijiaoh/go-godot-template/api_server/config"
 	"github.com/sijiaoh/go-godot-template/api_server/controllers"
+	"github.com/sijiaoh/go-godot-template/api_server/repositories"
 	"github.com/sijiaoh/go-godot-template/api_server/routes"
 	"github.com/sijiaoh/go-godot-template/api_server/testutils"
 )
 
 func TestCreateUser(t *testing.T) {
-	entClient := config.NewEntClient()
+	entClient := repositories.NewEntClient()
 	defer entClient.Close()
 	router := routes.NewRouter(entClient)
 
@@ -37,7 +37,7 @@ func TestCreateUser(t *testing.T) {
 }
 
 func TestCreateUser_BadRequest(t *testing.T) {
-	entClient := config.NewEntClient()
+	entClient := repositories.NewEntClient()
 	defer entClient.Close()
 	router := routes.NewRouter(entClient)
 
