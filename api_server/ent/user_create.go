@@ -4,6 +4,7 @@ package ent
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -29,6 +30,12 @@ func (_c *UserCreate) SetNillableName(v *string) *UserCreate {
 	if v != nil {
 		_c.SetName(*v)
 	}
+	return _c
+}
+
+// SetToken sets the "token" field.
+func (_c *UserCreate) SetToken(v string) *UserCreate {
+	_c.mutation.SetToken(v)
 	return _c
 }
 
@@ -71,6 +78,14 @@ func (_c *UserCreate) check() error {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "User.name": %w`, err)}
 		}
 	}
+	if _, ok := _c.mutation.Token(); !ok {
+		return &ValidationError{Name: "token", err: errors.New(`ent: missing required field "User.token"`)}
+	}
+	if v, ok := _c.mutation.Token(); ok {
+		if err := user.TokenValidator(v); err != nil {
+			return &ValidationError{Name: "token", err: fmt.Errorf(`ent: validator failed for field "User.token": %w`, err)}
+		}
+	}
 	return nil
 }
 
@@ -100,6 +115,10 @@ func (_c *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 	if value, ok := _c.mutation.Name(); ok {
 		_spec.SetField(user.FieldName, field.TypeString, value)
 		_node.Name = &value
+	}
+	if value, ok := _c.mutation.Token(); ok {
+		_spec.SetField(user.FieldToken, field.TypeString, value)
+		_node.Token = value
 	}
 	return _node, _spec
 }

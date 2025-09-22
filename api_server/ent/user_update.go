@@ -47,6 +47,20 @@ func (_u *UserUpdate) ClearName() *UserUpdate {
 	return _u
 }
 
+// SetToken sets the "token" field.
+func (_u *UserUpdate) SetToken(v string) *UserUpdate {
+	_u.mutation.SetToken(v)
+	return _u
+}
+
+// SetNillableToken sets the "token" field if the given value is not nil.
+func (_u *UserUpdate) SetNillableToken(v *string) *UserUpdate {
+	if v != nil {
+		_u.SetToken(*v)
+	}
+	return _u
+}
+
 // Mutation returns the UserMutation object of the builder.
 func (_u *UserUpdate) Mutation() *UserMutation {
 	return _u.mutation
@@ -86,6 +100,11 @@ func (_u *UserUpdate) check() error {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "User.name": %w`, err)}
 		}
 	}
+	if v, ok := _u.mutation.Token(); ok {
+		if err := user.TokenValidator(v); err != nil {
+			return &ValidationError{Name: "token", err: fmt.Errorf(`ent: validator failed for field "User.token": %w`, err)}
+		}
+	}
 	return nil
 }
 
@@ -106,6 +125,9 @@ func (_u *UserUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	}
 	if _u.mutation.NameCleared() {
 		_spec.ClearField(user.FieldName, field.TypeString)
+	}
+	if value, ok := _u.mutation.Token(); ok {
+		_spec.SetField(user.FieldToken, field.TypeString, value)
 	}
 	if _node, err = sqlgraph.UpdateNodes(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -144,6 +166,20 @@ func (_u *UserUpdateOne) SetNillableName(v *string) *UserUpdateOne {
 // ClearName clears the value of the "name" field.
 func (_u *UserUpdateOne) ClearName() *UserUpdateOne {
 	_u.mutation.ClearName()
+	return _u
+}
+
+// SetToken sets the "token" field.
+func (_u *UserUpdateOne) SetToken(v string) *UserUpdateOne {
+	_u.mutation.SetToken(v)
+	return _u
+}
+
+// SetNillableToken sets the "token" field if the given value is not nil.
+func (_u *UserUpdateOne) SetNillableToken(v *string) *UserUpdateOne {
+	if v != nil {
+		_u.SetToken(*v)
+	}
 	return _u
 }
 
@@ -199,6 +235,11 @@ func (_u *UserUpdateOne) check() error {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "User.name": %w`, err)}
 		}
 	}
+	if v, ok := _u.mutation.Token(); ok {
+		if err := user.TokenValidator(v); err != nil {
+			return &ValidationError{Name: "token", err: fmt.Errorf(`ent: validator failed for field "User.token": %w`, err)}
+		}
+	}
 	return nil
 }
 
@@ -236,6 +277,9 @@ func (_u *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) {
 	}
 	if _u.mutation.NameCleared() {
 		_spec.ClearField(user.FieldName, field.TypeString)
+	}
+	if value, ok := _u.mutation.Token(); ok {
+		_spec.SetField(user.FieldToken, field.TypeString, value)
 	}
 	_node = &User{config: _u.config}
 	_spec.Assign = _node.assignValues

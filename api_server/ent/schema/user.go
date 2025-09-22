@@ -18,6 +18,8 @@ func (User) Fields() []ent.Field {
 			Nillable().
 			NotEmpty().
 			MaxLen(10),
+		field.String("token").
+			NotEmpty(),
 	}
 }
 

@@ -31,4 +31,8 @@ func init() {
 			return nil
 		}
 	}()
+	// userDescToken is the schema descriptor for token field.
+	userDescToken := userFields[1].Descriptor()
+	// user.TokenValidator is a validator for the "token" field. It is called by the builders before save.
+	user.TokenValidator = userDescToken.Validators[0].(func(string) error)
 }

@@ -17,7 +17,9 @@ type User struct {
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
 	// Name holds the value of the "name" field.
-	Name         *string `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
+	// Token holds the value of the "token" field.
+	Token        string `json:"token,omitempty"`
 	selectValues sql.SelectValues
 }
 
@@ -28,7 +30,7 @@ func (*User) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case user.FieldID:
 			values[i] = new(sql.NullInt64)
-		case user.FieldName:
+		case user.FieldName, user.FieldToken:
 			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -57,6 +59,12 @@ func (_m *User) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.Name = new(string)
 				*_m.Name = value.String
+			}
+		case user.FieldToken:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field token", values[i])
+			} else if value.Valid {
+				_m.Token = value.String
 			}
 		default:
 			_m.selectValues.Set(columns[i], values[i])
@@ -98,6 +106,9 @@ func (_m *User) String() string {
 		builder.WriteString("name=")
 		builder.WriteString(*v)
 	}
+	builder.WriteString(", ")
+	builder.WriteString("token=")
+	builder.WriteString(_m.Token)
 	builder.WriteByte(')')
 	return builder.String()
 }
