@@ -1,0 +1,29 @@
+name: Api Server CI
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "api_server/**"
+      - ".github/workflows/api_server_ci.yml"
+  pull_request:
+    paths:
+      - "api_server/**"
+      - ".github/workflows/api_server_ci.yml"
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./api_server
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: "api_server/go.mod"
+          cache-dependency-path: "api_server/go.mod"
+
+      - name: Run tests
+        run: go test ./...
