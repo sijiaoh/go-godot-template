@@ -7,27 +7,31 @@ import (
 	"github.com/sijiaoh/go-godot-template/api_server/testutils"
 )
 
-func TestCreateUser(t *testing.T) {
+func TestUser_Upsert_Create(t *testing.T) {
 	deps := testutils.NewTestDeps()
 	defer deps.Close()
 
-	user, err := models.CreateUser(&deps.Deps, "Foo")
+	user := &models.User{Name: "Foo"}
+	err := user.Upsert(&deps.Deps)
 	testutils.AssertNoError(t, err)
+
+	testutils.AssertRecordCount(t, deps.EntClient.User.Query(), deps.Ctx, 1)
 
 	if len(user.Token) == 0 {
 		t.Fatal("用户的Token生成失败")
 	}
 }
 
-func TestUser_ApplyUpdate(t *testing.T) {
+func TestUser_Upsert_Update(t *testing.T) {
 	deps := testutils.NewTestDeps()
 	defer deps.Close()
 
-	user := CreateUser(t, deps)
+	user := CreateFooUser(t, deps)
+
 	newName := "Bar"
 	user.Name = newName
 
-	err := user.ApplyUpdate(&deps.Deps)
+	err := user.Upsert(&deps.Deps)
 	testutils.AssertNoError(t, err)
 
 	testutils.AssertRecordCount(t, deps.EntClient.User.Query(), deps.Ctx, 1)
@@ -37,8 +41,9 @@ func TestUser_ApplyUpdate(t *testing.T) {
 	testutils.AssertEqual(t, newEntUser.Name, newName)
 }
 
-func CreateUser(t *testing.T, deps *testutils.TestDeps) *models.User {
-	user, err := models.CreateUser(&deps.Deps, "Foo")
+func CreateFooUser(t *testing.T, deps *testutils.TestDeps) *models.User {
+	user := &models.User{Name: "Foo"}
+	err := user.Upsert(&deps.Deps)
 	testutils.AssertNoError(t, err)
 	return user
 }

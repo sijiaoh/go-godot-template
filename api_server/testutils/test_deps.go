@@ -15,7 +15,7 @@ func NewTestDeps() *TestDeps {
 	entClient := repositories.NewEntClient()
 	utils.NewDeps(entClient, context.Background())
 	return &TestDeps{
-		Deps: utils.NewDeps(entClient, context.Background()),
+		Deps: *utils.NewDeps(entClient, context.Background()),
 	}
 }
 

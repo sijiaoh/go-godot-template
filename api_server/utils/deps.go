@@ -11,8 +11,8 @@ type Deps struct {
 	Ctx       context.Context
 }
 
-func NewDeps(entClient *ent.Client, ctx context.Context) Deps {
-	return Deps{
+func NewDeps(entClient *ent.Client, ctx context.Context) *Deps {
+	return &Deps{
 		EntClient: entClient,
 		Ctx:       ctx,
 	}
