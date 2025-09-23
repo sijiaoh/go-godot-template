@@ -5,12 +5,19 @@ import (
 	"github.com/sijiaoh/go-godot-template/api_server/ent"
 	ent_user "github.com/sijiaoh/go-godot-template/api_server/ent/user"
 	"github.com/sijiaoh/go-godot-template/api_server/utils"
+	"github.com/sijiaoh/go-godot-template/api_server/validators"
 )
 
 type User struct {
 	ID    int
 	Name  string `validate:"min_runes=1,max_runes=12"`
 	Token string
+}
+
+func NewUser(name string) *User {
+	return &User{
+		Name: name,
+	}
 }
 
 func NewUserFromEnt(entUser *ent.User) *User {
@@ -37,6 +44,11 @@ func (u *User) Upsert(deps *utils.Deps) error {
 			return err
 		}
 		u.Token = uuidv7.String()
+	}
+
+	err := validators.Validate().Struct(u)
+	if err != nil {
+		return err
 	}
 
 	id, err := deps.EntClient.User.Create().

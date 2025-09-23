@@ -11,7 +11,7 @@ func TestUser_Upsert_Create(t *testing.T) {
 	deps := testutils.NewTestDeps()
 	defer deps.Close()
 
-	user := &models.User{Name: "Foo"}
+	user := models.NewUser("Foo")
 	err := user.Upsert(&deps.Deps)
 	testutils.AssertNoError(t, err)
 
@@ -42,7 +42,7 @@ func TestUser_Upsert_Update(t *testing.T) {
 }
 
 func CreateFooUser(t *testing.T, deps *testutils.TestDeps) *models.User {
-	user := &models.User{Name: "Foo"}
+	user := models.NewUser("Foo")
 	err := user.Upsert(&deps.Deps)
 	testutils.AssertNoError(t, err)
 	return user

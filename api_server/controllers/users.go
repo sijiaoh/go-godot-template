@@ -20,9 +20,7 @@ func (c *Controller) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user := &models.User{
-		Name: params.Name,
-	}
+	user := models.NewUser(params.Name)
 	err = user.Upsert(deps)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
