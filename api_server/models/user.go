@@ -13,7 +13,7 @@ type User struct {
 	entUser *ent.User
 
 	ID    int
-	Name  string
+	Name  string `validate:"min_runes=1,max_runes=12"`
 	Token string
 }
 
