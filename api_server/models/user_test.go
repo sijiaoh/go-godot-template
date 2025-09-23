@@ -7,6 +7,18 @@ import (
 	"github.com/sijiaoh/go-godot-template/api_server/testutils"
 )
 
+func TestCreateUser(t *testing.T) {
+	deps := testutils.NewTestDeps()
+	defer deps.Close()
+
+	user, err := models.CreateUser(&deps.Deps, "Foo")
+	testutils.AssertNoError(t, err)
+
+	if len(user.Token) == 0 {
+		t.Fatal("用户的Token生成失败")
+	}
+}
+
 func TestUser_ApplyUpdate(t *testing.T) {
 	deps := testutils.NewTestDeps()
 	defer deps.Close()
@@ -26,7 +38,7 @@ func TestUser_ApplyUpdate(t *testing.T) {
 }
 
 func CreateUser(t *testing.T, deps *testutils.TestDeps) *models.User {
-	entUser, err := deps.EntClient.User.Create().SetName("Foo").Save(deps.Ctx)
+	user, err := models.CreateUser(&deps.Deps, "Foo")
 	testutils.AssertNoError(t, err)
-	return models.NewUserFromEnt(entUser)
+	return user
 }

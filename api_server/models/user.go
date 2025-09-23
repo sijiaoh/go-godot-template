@@ -3,22 +3,54 @@ package models
 import (
 	"errors"
 
+	"github.com/google/uuid"
 	"github.com/sijiaoh/go-godot-template/api_server/ent"
+	ent_user "github.com/sijiaoh/go-godot-template/api_server/ent/user"
 	"github.com/sijiaoh/go-godot-template/api_server/utils"
 )
 
 type User struct {
-	ID      int
-	Name    *string
 	entUser *ent.User
+
+	ID    int
+	Name  *string
+	Token string
 }
 
 func NewUserFromEnt(entUser *ent.User) *User {
 	return &User{
-		ID:      entUser.ID,
-		Name:    entUser.Name,
 		entUser: entUser,
+
+		ID:    entUser.ID,
+		Name:  entUser.Name,
+		Token: entUser.Token,
 	}
+}
+
+func CreateUser(deps *utils.Deps, name string) (*User, error) {
+	uuidv7, err := uuid.NewV7()
+	if err != nil {
+		return nil, err
+	}
+
+	entUser, err := deps.EntClient.User.Create().
+		SetName(name).
+		SetToken(uuidv7.String()).
+		Save(deps.Ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return NewUserFromEnt(entUser), nil
+}
+
+func FindUserByToken(deps *utils.Deps, token string) (*User, error) {
+	entUser, err := deps.EntClient.User.Query().Where(ent_user.TokenEQ(token)).Only(deps.Ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return NewUserFromEnt(entUser), nil
 }
 
 func (u *User) ApplyUpdate(deps *utils.Deps) error {
@@ -33,6 +65,10 @@ func (u *User) ApplyUpdate(deps *utils.Deps) error {
 		} else {
 			update.ClearName()
 		}
+	}
+
+	if u.Token != u.entUser.Token {
+		update.SetToken(u.Token)
 	}
 
 	entUser, err := update.Save(deps.Ctx)

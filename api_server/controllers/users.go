@@ -20,14 +20,13 @@ func (c *Controller) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	entUser, err := deps.EntClient.User.Create().SetName(params.Name).Save(deps.Ctx)
+	user, err := models.CreateUser(&deps, params.Name)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	user := models.NewUserFromEnt(entUser)
 	serializer := serializers.NewUserSerializer(user)
 	c.renderJson(w, serializer)
 }
