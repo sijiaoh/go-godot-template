@@ -19,7 +19,8 @@ func (User) Fields() []ent.Field {
 			NotEmpty().
 			MaxLen(10),
 		field.String("token").
-			NotEmpty(),
+			NotEmpty().
+			Unique(),
 	}
 }
 
