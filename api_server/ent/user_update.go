@@ -41,12 +41,6 @@ func (_u *UserUpdate) SetNillableName(v *string) *UserUpdate {
 	return _u
 }
 
-// ClearName clears the value of the "name" field.
-func (_u *UserUpdate) ClearName() *UserUpdate {
-	_u.mutation.ClearName()
-	return _u
-}
-
 // SetToken sets the "token" field.
 func (_u *UserUpdate) SetToken(v string) *UserUpdate {
 	_u.mutation.SetToken(v)
@@ -123,9 +117,6 @@ func (_u *UserUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	if value, ok := _u.mutation.Name(); ok {
 		_spec.SetField(user.FieldName, field.TypeString, value)
 	}
-	if _u.mutation.NameCleared() {
-		_spec.ClearField(user.FieldName, field.TypeString)
-	}
 	if value, ok := _u.mutation.Token(); ok {
 		_spec.SetField(user.FieldToken, field.TypeString, value)
 	}
@@ -160,12 +151,6 @@ func (_u *UserUpdateOne) SetNillableName(v *string) *UserUpdateOne {
 	if v != nil {
 		_u.SetName(*v)
 	}
-	return _u
-}
-
-// ClearName clears the value of the "name" field.
-func (_u *UserUpdateOne) ClearName() *UserUpdateOne {
-	_u.mutation.ClearName()
 	return _u
 }
 
@@ -274,9 +259,6 @@ func (_u *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) {
 	}
 	if value, ok := _u.mutation.Name(); ok {
 		_spec.SetField(user.FieldName, field.TypeString, value)
-	}
-	if _u.mutation.NameCleared() {
-		_spec.ClearField(user.FieldName, field.TypeString)
 	}
 	if value, ok := _u.mutation.Token(); ok {
 		_spec.SetField(user.FieldToken, field.TypeString, value)

@@ -7,6 +7,7 @@ require (
 	github.com/go-chi/chi/v5 v5.2.3
 	github.com/google/uuid v1.6.0
 	github.com/mattn/go-sqlite3 v1.14.32
+	github.com/nicksnyder/go-i18n/v2 v2.6.0
 )
 
 require (
@@ -21,6 +22,6 @@ require (
 	github.com/rogpeppe/go-internal v1.14.1 // indirect
 	github.com/zclconf/go-cty v1.14.4 // indirect
 	github.com/zclconf/go-cty-yaml v1.1.0 // indirect
-	golang.org/x/mod v0.23.0 // indirect
-	golang.org/x/text v0.21.0 // indirect
+	golang.org/x/mod v0.27.0 // indirect
+	golang.org/x/text v0.29.0 // indirect
 )

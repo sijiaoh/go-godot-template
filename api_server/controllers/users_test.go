@@ -38,7 +38,7 @@ func TestCreateUser(t *testing.T) {
 
 	var res serializers.UserSerializer
 	json.Unmarshal(response.Body.Bytes(), &res)
-	testutils.AssertStrPtrEqual(t, res.Name, &params.Name)
+	testutils.AssertEqual(t, res.Name, params.Name)
 }
 
 func TestCreateUser_BadRequest(t *testing.T) {

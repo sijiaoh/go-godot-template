@@ -17,7 +17,7 @@ type User struct {
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
 	// Name holds the value of the "name" field.
-	Name *string `json:"name,omitempty"`
+	Name string `json:"name,omitempty"`
 	// Token holds the value of the "token" field.
 	Token        string `json:"token,omitempty"`
 	selectValues sql.SelectValues
@@ -57,8 +57,7 @@ func (_m *User) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field name", values[i])
 			} else if value.Valid {
-				_m.Name = new(string)
-				*_m.Name = value.String
+				_m.Name = value.String
 			}
 		case user.FieldToken:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -102,10 +101,8 @@ func (_m *User) String() string {
 	var builder strings.Builder
 	builder.WriteString("User(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
-	if v := _m.Name; v != nil {
-		builder.WriteString("name=")
-		builder.WriteString(*v)
-	}
+	builder.WriteString("name=")
+	builder.WriteString(_m.Name)
 	builder.WriteString(", ")
 	builder.WriteString("token=")
 	builder.WriteString(_m.Token)

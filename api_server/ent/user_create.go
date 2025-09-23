@@ -25,14 +25,6 @@ func (_c *UserCreate) SetName(v string) *UserCreate {
 	return _c
 }
 
-// SetNillableName sets the "name" field if the given value is not nil.
-func (_c *UserCreate) SetNillableName(v *string) *UserCreate {
-	if v != nil {
-		_c.SetName(*v)
-	}
-	return _c
-}
-
 // SetToken sets the "token" field.
 func (_c *UserCreate) SetToken(v string) *UserCreate {
 	_c.mutation.SetToken(v)
@@ -73,6 +65,9 @@ func (_c *UserCreate) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (_c *UserCreate) check() error {
+	if _, ok := _c.mutation.Name(); !ok {
+		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "User.name"`)}
+	}
 	if v, ok := _c.mutation.Name(); ok {
 		if err := user.NameValidator(v); err != nil {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "User.name": %w`, err)}
@@ -114,7 +109,7 @@ func (_c *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 	)
 	if value, ok := _c.mutation.Name(); ok {
 		_spec.SetField(user.FieldName, field.TypeString, value)
-		_node.Name = &value
+		_node.Name = value
 	}
 	if value, ok := _c.mutation.Token(); ok {
 		_spec.SetField(user.FieldToken, field.TypeString, value)

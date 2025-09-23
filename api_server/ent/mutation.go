@@ -155,7 +155,7 @@ func (m *UserMutation) Name() (r string, exists bool) {
 // OldName returns the old "name" field's value of the User entity.
 // If the User object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *UserMutation) OldName(ctx context.Context) (v *string, err error) {
+func (m *UserMutation) OldName(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldName is only allowed on UpdateOne operations")
 	}
@@ -169,22 +169,9 @@ func (m *UserMutation) OldName(ctx context.Context) (v *string, err error) {
 	return oldValue.Name, nil
 }
 
-// ClearName clears the value of the "name" field.
-func (m *UserMutation) ClearName() {
-	m.name = nil
-	m.clearedFields[user.FieldName] = struct{}{}
-}
-
-// NameCleared returns if the "name" field was cleared in this mutation.
-func (m *UserMutation) NameCleared() bool {
-	_, ok := m.clearedFields[user.FieldName]
-	return ok
-}
-
 // ResetName resets all changes to the "name" field.
 func (m *UserMutation) ResetName() {
 	m.name = nil
-	delete(m.clearedFields, user.FieldName)
 }
 
 // SetToken sets the "token" field.
@@ -341,11 +328,7 @@ func (m *UserMutation) AddField(name string, value ent.Value) error {
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
 func (m *UserMutation) ClearedFields() []string {
-	var fields []string
-	if m.FieldCleared(user.FieldName) {
-		fields = append(fields, user.FieldName)
-	}
-	return fields
+	return nil
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
@@ -358,11 +341,6 @@ func (m *UserMutation) FieldCleared(name string) bool {
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
 func (m *UserMutation) ClearField(name string) error {
-	switch name {
-	case user.FieldName:
-		m.ClearName()
-		return nil
-	}
 	return fmt.Errorf("unknown User nullable field %s", name)
 }
 

@@ -25,7 +25,7 @@ func TestUser_ApplyUpdate(t *testing.T) {
 
 	user := CreateUser(t, deps)
 	newName := "Bar"
-	user.Name = &newName
+	user.Name = newName
 
 	err := user.ApplyUpdate(&deps.Deps)
 	testutils.AssertNoError(t, err)
@@ -34,7 +34,7 @@ func TestUser_ApplyUpdate(t *testing.T) {
 
 	newEntUser, err := deps.EntClient.User.Get(deps.Ctx, user.ID)
 	testutils.AssertNoError(t, err)
-	testutils.AssertStrPtrEqual(t, newEntUser.Name, &newName)
+	testutils.AssertEqual(t, newEntUser.Name, newName)
 }
 
 func CreateUser(t *testing.T, deps *testutils.TestDeps) *models.User {

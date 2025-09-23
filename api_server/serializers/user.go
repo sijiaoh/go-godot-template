@@ -3,8 +3,8 @@ package serializers
 import "github.com/sijiaoh/go-godot-template/api_server/models"
 
 type UserSerializer struct {
-	ID   int     `json:"id"`
-	Name *string `json:"name,omitempty"`
+	ID   int    `json:"id"`
+	Name string `json:"name"`
 }
 
 func NewUserSerializer(user *models.User) *UserSerializer {

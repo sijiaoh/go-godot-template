@@ -13,7 +13,7 @@ type User struct {
 	entUser *ent.User
 
 	ID    int
-	Name  *string
+	Name  string
 	Token string
 }
 
@@ -59,14 +59,10 @@ func (u *User) ApplyUpdate(deps *utils.Deps) error {
 	}
 
 	update := deps.EntClient.User.UpdateOne(u.entUser)
-	if !utils.StrPtrEq(u.Name, u.entUser.Name) {
-		if u.Name != nil {
-			update.SetName(*u.Name)
-		} else {
-			update.ClearName()
-		}
-	}
 
+	if u.Name != u.entUser.Name {
+		update.SetName(u.Name)
+	}
 	if u.Token != u.entUser.Token {
 		update.SetToken(u.Token)
 	}
