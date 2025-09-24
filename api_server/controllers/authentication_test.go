@@ -13,22 +13,22 @@ import (
 	"github.com/sijiaoh/go-godot-template/api_server/testutils"
 )
 
-func TestCreateUser(t *testing.T) {
+func TestSignup(t *testing.T) {
 	testServer := testutils.NewTestServer()
 	defer testServer.Close()
 
 	entClient := testServer.EntClient
 	router := testServer.Router
 
-	params := controllers.CreateUserParams{
-		Name: "Foo",
+	params := controllers.SignupParams{
+		UserName: "Foo",
 	}
 	data, err := json.Marshal(params)
 	if err != nil {
 		t.Fatal(err)
 	}
 	body := bytes.NewBuffer(data)
-	request := httptest.NewRequest(http.MethodPost, "/users", body)
+	request := httptest.NewRequest(http.MethodPost, "/signup", body)
 
 	response := httptest.NewRecorder()
 	router.ServeHTTP(response, request)
@@ -38,10 +38,10 @@ func TestCreateUser(t *testing.T) {
 
 	var res serializers.UserSerializer
 	json.Unmarshal(response.Body.Bytes(), &res)
-	testutils.AssertEqual(t, res.Name, params.Name)
+	testutils.AssertEqual(t, res.Name, params.UserName)
 }
 
-func TestCreateUser_BadRequest(t *testing.T) {
+func TestSignup_BadRequest(t *testing.T) {
 	testServer := testutils.NewTestServer()
 	defer testServer.Close()
 
@@ -49,7 +49,7 @@ func TestCreateUser_BadRequest(t *testing.T) {
 	router := testServer.Router
 
 	body := bytes.NewBuffer([]byte("invalid json"))
-	request := httptest.NewRequest(http.MethodPost, "/users", body)
+	request := httptest.NewRequest(http.MethodPost, "/signup", body)
 
 	response := httptest.NewRecorder()
 	router.ServeHTTP(response, request)

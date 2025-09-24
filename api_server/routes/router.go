@@ -20,7 +20,7 @@ func NewRouter(entClient *ent.Client) *chi.Mux {
 
 	controller := controllers.NewController(entClient)
 
-	router.Post("/users", controller.CreateUser)
+	router.Post("/signup", controller.Signup)
 
 	return router
 }

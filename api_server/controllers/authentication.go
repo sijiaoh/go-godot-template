@@ -8,19 +8,19 @@ import (
 	"github.com/sijiaoh/go-godot-template/api_server/utils"
 )
 
-type CreateUserParams struct {
-	Name string `json:"name"`
+type SignupParams struct {
+	UserName string `json:"name"`
 }
 
-func (c *Controller) CreateUser(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) Signup(w http.ResponseWriter, r *http.Request) {
 	deps := utils.NewDeps(c.entClient, r.Context())
 
-	params, err := utils.ParseJsonBody[CreateUserParams](w, r.Body)
+	params, err := utils.ParseJsonBody[SignupParams](w, r.Body)
 	if err != nil {
 		return
 	}
 
-	user := models.NewUser(params.Name)
+	user := models.NewUser(params.UserName)
 	err = user.Upsert(deps)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
