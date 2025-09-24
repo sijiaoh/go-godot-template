@@ -10,6 +10,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"github.com/sijiaoh/go-godot-template/api_server/ent/clientsession"
 	"github.com/sijiaoh/go-godot-template/api_server/ent/predicate"
 	"github.com/sijiaoh/go-godot-template/api_server/ent/user"
 )
@@ -41,23 +42,45 @@ func (_u *UserUpdate) SetNillableName(v *string) *UserUpdate {
 	return _u
 }
 
-// SetToken sets the "token" field.
-func (_u *UserUpdate) SetToken(v string) *UserUpdate {
-	_u.mutation.SetToken(v)
+// AddClientSessionIDs adds the "client_sessions" edge to the ClientSession entity by IDs.
+func (_u *UserUpdate) AddClientSessionIDs(ids ...int) *UserUpdate {
+	_u.mutation.AddClientSessionIDs(ids...)
 	return _u
 }
 
-// SetNillableToken sets the "token" field if the given value is not nil.
-func (_u *UserUpdate) SetNillableToken(v *string) *UserUpdate {
-	if v != nil {
-		_u.SetToken(*v)
+// AddClientSessions adds the "client_sessions" edges to the ClientSession entity.
+func (_u *UserUpdate) AddClientSessions(v ...*ClientSession) *UserUpdate {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return _u
+	return _u.AddClientSessionIDs(ids...)
 }
 
 // Mutation returns the UserMutation object of the builder.
 func (_u *UserUpdate) Mutation() *UserMutation {
 	return _u.mutation
+}
+
+// ClearClientSessions clears all "client_sessions" edges to the ClientSession entity.
+func (_u *UserUpdate) ClearClientSessions() *UserUpdate {
+	_u.mutation.ClearClientSessions()
+	return _u
+}
+
+// RemoveClientSessionIDs removes the "client_sessions" edge to ClientSession entities by IDs.
+func (_u *UserUpdate) RemoveClientSessionIDs(ids ...int) *UserUpdate {
+	_u.mutation.RemoveClientSessionIDs(ids...)
+	return _u
+}
+
+// RemoveClientSessions removes "client_sessions" edges to ClientSession entities.
+func (_u *UserUpdate) RemoveClientSessions(v ...*ClientSession) *UserUpdate {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveClientSessionIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -99,8 +122,50 @@ func (_u *UserUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	if value, ok := _u.mutation.Name(); ok {
 		_spec.SetField(user.FieldName, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.Token(); ok {
-		_spec.SetField(user.FieldToken, field.TypeString, value)
+	if _u.mutation.ClientSessionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.ClientSessionsTable,
+			Columns: []string{user.ClientSessionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(clientsession.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedClientSessionsIDs(); len(nodes) > 0 && !_u.mutation.ClientSessionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.ClientSessionsTable,
+			Columns: []string{user.ClientSessionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(clientsession.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.ClientSessionsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.ClientSessionsTable,
+			Columns: []string{user.ClientSessionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(clientsession.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if _node, err = sqlgraph.UpdateNodes(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -136,23 +201,45 @@ func (_u *UserUpdateOne) SetNillableName(v *string) *UserUpdateOne {
 	return _u
 }
 
-// SetToken sets the "token" field.
-func (_u *UserUpdateOne) SetToken(v string) *UserUpdateOne {
-	_u.mutation.SetToken(v)
+// AddClientSessionIDs adds the "client_sessions" edge to the ClientSession entity by IDs.
+func (_u *UserUpdateOne) AddClientSessionIDs(ids ...int) *UserUpdateOne {
+	_u.mutation.AddClientSessionIDs(ids...)
 	return _u
 }
 
-// SetNillableToken sets the "token" field if the given value is not nil.
-func (_u *UserUpdateOne) SetNillableToken(v *string) *UserUpdateOne {
-	if v != nil {
-		_u.SetToken(*v)
+// AddClientSessions adds the "client_sessions" edges to the ClientSession entity.
+func (_u *UserUpdateOne) AddClientSessions(v ...*ClientSession) *UserUpdateOne {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return _u
+	return _u.AddClientSessionIDs(ids...)
 }
 
 // Mutation returns the UserMutation object of the builder.
 func (_u *UserUpdateOne) Mutation() *UserMutation {
 	return _u.mutation
+}
+
+// ClearClientSessions clears all "client_sessions" edges to the ClientSession entity.
+func (_u *UserUpdateOne) ClearClientSessions() *UserUpdateOne {
+	_u.mutation.ClearClientSessions()
+	return _u
+}
+
+// RemoveClientSessionIDs removes the "client_sessions" edge to ClientSession entities by IDs.
+func (_u *UserUpdateOne) RemoveClientSessionIDs(ids ...int) *UserUpdateOne {
+	_u.mutation.RemoveClientSessionIDs(ids...)
+	return _u
+}
+
+// RemoveClientSessions removes "client_sessions" edges to ClientSession entities.
+func (_u *UserUpdateOne) RemoveClientSessions(v ...*ClientSession) *UserUpdateOne {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveClientSessionIDs(ids...)
 }
 
 // Where appends a list predicates to the UserUpdate builder.
@@ -224,8 +311,50 @@ func (_u *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) {
 	if value, ok := _u.mutation.Name(); ok {
 		_spec.SetField(user.FieldName, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.Token(); ok {
-		_spec.SetField(user.FieldToken, field.TypeString, value)
+	if _u.mutation.ClientSessionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.ClientSessionsTable,
+			Columns: []string{user.ClientSessionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(clientsession.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedClientSessionsIDs(); len(nodes) > 0 && !_u.mutation.ClientSessionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.ClientSessionsTable,
+			Columns: []string{user.ClientSessionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(clientsession.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.ClientSessionsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.ClientSessionsTable,
+			Columns: []string{user.ClientSessionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(clientsession.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	_node = &User{config: _u.config}
 	_spec.Assign = _node.assignValues

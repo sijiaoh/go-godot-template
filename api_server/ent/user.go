@@ -18,9 +18,28 @@ type User struct {
 	ID int `json:"id,omitempty"`
 	// Name holds the value of the "name" field.
 	Name string `json:"name,omitempty"`
-	// Token holds the value of the "token" field.
-	Token        string `json:"token,omitempty"`
+	// Edges holds the relations/edges for other nodes in the graph.
+	// The values are being populated by the UserQuery when eager-loading is set.
+	Edges        UserEdges `json:"edges"`
 	selectValues sql.SelectValues
+}
+
+// UserEdges holds the relations/edges for other nodes in the graph.
+type UserEdges struct {
+	// ClientSessions holds the value of the client_sessions edge.
+	ClientSessions []*ClientSession `json:"client_sessions,omitempty"`
+	// loadedTypes holds the information for reporting if a
+	// type was loaded (or requested) in eager-loading or not.
+	loadedTypes [1]bool
+}
+
+// ClientSessionsOrErr returns the ClientSessions value or an error if the edge
+// was not loaded in eager-loading.
+func (e UserEdges) ClientSessionsOrErr() ([]*ClientSession, error) {
+	if e.loadedTypes[0] {
+		return e.ClientSessions, nil
+	}
+	return nil, &NotLoadedError{edge: "client_sessions"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -30,7 +49,7 @@ func (*User) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case user.FieldID:
 			values[i] = new(sql.NullInt64)
-		case user.FieldName, user.FieldToken:
+		case user.FieldName:
 			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -59,12 +78,6 @@ func (_m *User) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.Name = value.String
 			}
-		case user.FieldToken:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field token", values[i])
-			} else if value.Valid {
-				_m.Token = value.String
-			}
 		default:
 			_m.selectValues.Set(columns[i], values[i])
 		}
@@ -76,6 +89,11 @@ func (_m *User) assignValues(columns []string, values []any) error {
 // This includes values selected through modifiers, order, etc.
 func (_m *User) Value(name string) (ent.Value, error) {
 	return _m.selectValues.Get(name)
+}
+
+// QueryClientSessions queries the "client_sessions" edge of the User entity.
+func (_m *User) QueryClientSessions() *ClientSessionQuery {
+	return NewUserClient(_m.config).QueryClientSessions(_m)
 }
 
 // Update returns a builder for updating this User.
@@ -103,9 +121,6 @@ func (_m *User) String() string {
 	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
 	builder.WriteString("name=")
 	builder.WriteString(_m.Name)
-	builder.WriteString(", ")
-	builder.WriteString("token=")
-	builder.WriteString(_m.Token)
 	builder.WriteByte(')')
 	return builder.String()
 }

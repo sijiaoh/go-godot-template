@@ -4,6 +4,7 @@ package user
 
 import (
 	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/sijiaoh/go-godot-template/api_server/ent/predicate"
 )
 
@@ -55,11 +56,6 @@ func IDLTE(id int) predicate.User {
 // Name applies equality check predicate on the "name" field. It's identical to NameEQ.
 func Name(v string) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldName, v))
-}
-
-// Token applies equality check predicate on the "token" field. It's identical to TokenEQ.
-func Token(v string) predicate.User {
-	return predicate.User(sql.FieldEQ(FieldToken, v))
 }
 
 // NameEQ applies the EQ predicate on the "name" field.
@@ -127,69 +123,27 @@ func NameContainsFold(v string) predicate.User {
 	return predicate.User(sql.FieldContainsFold(FieldName, v))
 }
 
-// TokenEQ applies the EQ predicate on the "token" field.
-func TokenEQ(v string) predicate.User {
-	return predicate.User(sql.FieldEQ(FieldToken, v))
+// HasClientSessions applies the HasEdge predicate on the "client_sessions" edge.
+func HasClientSessions() predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, ClientSessionsTable, ClientSessionsColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
 }
 
-// TokenNEQ applies the NEQ predicate on the "token" field.
-func TokenNEQ(v string) predicate.User {
-	return predicate.User(sql.FieldNEQ(FieldToken, v))
-}
-
-// TokenIn applies the In predicate on the "token" field.
-func TokenIn(vs ...string) predicate.User {
-	return predicate.User(sql.FieldIn(FieldToken, vs...))
-}
-
-// TokenNotIn applies the NotIn predicate on the "token" field.
-func TokenNotIn(vs ...string) predicate.User {
-	return predicate.User(sql.FieldNotIn(FieldToken, vs...))
-}
-
-// TokenGT applies the GT predicate on the "token" field.
-func TokenGT(v string) predicate.User {
-	return predicate.User(sql.FieldGT(FieldToken, v))
-}
-
-// TokenGTE applies the GTE predicate on the "token" field.
-func TokenGTE(v string) predicate.User {
-	return predicate.User(sql.FieldGTE(FieldToken, v))
-}
-
-// TokenLT applies the LT predicate on the "token" field.
-func TokenLT(v string) predicate.User {
-	return predicate.User(sql.FieldLT(FieldToken, v))
-}
-
-// TokenLTE applies the LTE predicate on the "token" field.
-func TokenLTE(v string) predicate.User {
-	return predicate.User(sql.FieldLTE(FieldToken, v))
-}
-
-// TokenContains applies the Contains predicate on the "token" field.
-func TokenContains(v string) predicate.User {
-	return predicate.User(sql.FieldContains(FieldToken, v))
-}
-
-// TokenHasPrefix applies the HasPrefix predicate on the "token" field.
-func TokenHasPrefix(v string) predicate.User {
-	return predicate.User(sql.FieldHasPrefix(FieldToken, v))
-}
-
-// TokenHasSuffix applies the HasSuffix predicate on the "token" field.
-func TokenHasSuffix(v string) predicate.User {
-	return predicate.User(sql.FieldHasSuffix(FieldToken, v))
-}
-
-// TokenEqualFold applies the EqualFold predicate on the "token" field.
-func TokenEqualFold(v string) predicate.User {
-	return predicate.User(sql.FieldEqualFold(FieldToken, v))
-}
-
-// TokenContainsFold applies the ContainsFold predicate on the "token" field.
-func TokenContainsFold(v string) predicate.User {
-	return predicate.User(sql.FieldContainsFold(FieldToken, v))
+// HasClientSessionsWith applies the HasEdge predicate on the "client_sessions" edge with a given conditions (other predicates).
+func HasClientSessionsWith(preds ...predicate.ClientSession) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		step := newClientSessionsStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
 }
 
 // And groups predicates with the AND operator between them.

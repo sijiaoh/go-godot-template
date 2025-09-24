@@ -4,6 +4,7 @@ package user
 
 import (
 	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 )
 
 const (
@@ -13,17 +14,23 @@ const (
 	FieldID = "id"
 	// FieldName holds the string denoting the name field in the database.
 	FieldName = "name"
-	// FieldToken holds the string denoting the token field in the database.
-	FieldToken = "token"
+	// EdgeClientSessions holds the string denoting the client_sessions edge name in mutations.
+	EdgeClientSessions = "client_sessions"
 	// Table holds the table name of the user in the database.
 	Table = "users"
+	// ClientSessionsTable is the table that holds the client_sessions relation/edge.
+	ClientSessionsTable = "client_sessions"
+	// ClientSessionsInverseTable is the table name for the ClientSession entity.
+	// It exists in this package in order to avoid circular dependency with the "clientsession" package.
+	ClientSessionsInverseTable = "client_sessions"
+	// ClientSessionsColumn is the table column denoting the client_sessions relation/edge.
+	ClientSessionsColumn = "user_client_sessions"
 )
 
 // Columns holds all SQL columns for user fields.
 var Columns = []string{
 	FieldID,
 	FieldName,
-	FieldToken,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -49,7 +56,23 @@ func ByName(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldName, opts...).ToFunc()
 }
 
-// ByToken orders the results by the token field.
-func ByToken(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldToken, opts...).ToFunc()
+// ByClientSessionsCount orders the results by client_sessions count.
+func ByClientSessionsCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newClientSessionsStep(), opts...)
+	}
+}
+
+// ByClientSessions orders the results by client_sessions terms.
+func ByClientSessions(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newClientSessionsStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+func newClientSessionsStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(ClientSessionsInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, ClientSessionsTable, ClientSessionsColumn),
+	)
 }

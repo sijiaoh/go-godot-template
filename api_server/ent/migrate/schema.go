@@ -8,11 +8,30 @@ import (
 )
 
 var (
+	// ClientSessionsColumns holds the columns for the "client_sessions" table.
+	ClientSessionsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "token", Type: field.TypeString, Unique: true},
+		{Name: "user_client_sessions", Type: field.TypeInt},
+	}
+	// ClientSessionsTable holds the schema information for the "client_sessions" table.
+	ClientSessionsTable = &schema.Table{
+		Name:       "client_sessions",
+		Columns:    ClientSessionsColumns,
+		PrimaryKey: []*schema.Column{ClientSessionsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "client_sessions_users_client_sessions",
+				Columns:    []*schema.Column{ClientSessionsColumns[2]},
+				RefColumns: []*schema.Column{UsersColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+		},
+	}
 	// UsersColumns holds the columns for the "users" table.
 	UsersColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "name", Type: field.TypeString},
-		{Name: "token", Type: field.TypeString, Unique: true},
 	}
 	// UsersTable holds the schema information for the "users" table.
 	UsersTable = &schema.Table{
@@ -22,9 +41,11 @@ var (
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
+		ClientSessionsTable,
 		UsersTable,
 	}
 )
 
 func init() {
+	ClientSessionsTable.ForeignKeys[0].RefTable = UsersTable
 }

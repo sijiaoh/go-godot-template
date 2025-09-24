@@ -6,5 +6,8 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
+// ClientSession is the predicate function for clientsession builders.
+type ClientSession func(*sql.Selector)
+
 // User is the predicate function for user builders.
 type User func(*sql.Selector)

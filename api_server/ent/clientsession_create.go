@@ -14,47 +14,43 @@ import (
 	"github.com/sijiaoh/go-godot-template/api_server/ent/user"
 )
 
-// UserCreate is the builder for creating a User entity.
-type UserCreate struct {
+// ClientSessionCreate is the builder for creating a ClientSession entity.
+type ClientSessionCreate struct {
 	config
-	mutation *UserMutation
+	mutation *ClientSessionMutation
 	hooks    []Hook
 	conflict []sql.ConflictOption
 }
 
-// SetName sets the "name" field.
-func (_c *UserCreate) SetName(v string) *UserCreate {
-	_c.mutation.SetName(v)
+// SetToken sets the "token" field.
+func (_c *ClientSessionCreate) SetToken(v string) *ClientSessionCreate {
+	_c.mutation.SetToken(v)
 	return _c
 }
 
-// AddClientSessionIDs adds the "client_sessions" edge to the ClientSession entity by IDs.
-func (_c *UserCreate) AddClientSessionIDs(ids ...int) *UserCreate {
-	_c.mutation.AddClientSessionIDs(ids...)
+// SetUserID sets the "user" edge to the User entity by ID.
+func (_c *ClientSessionCreate) SetUserID(id int) *ClientSessionCreate {
+	_c.mutation.SetUserID(id)
 	return _c
 }
 
-// AddClientSessions adds the "client_sessions" edges to the ClientSession entity.
-func (_c *UserCreate) AddClientSessions(v ...*ClientSession) *UserCreate {
-	ids := make([]int, len(v))
-	for i := range v {
-		ids[i] = v[i].ID
-	}
-	return _c.AddClientSessionIDs(ids...)
+// SetUser sets the "user" edge to the User entity.
+func (_c *ClientSessionCreate) SetUser(v *User) *ClientSessionCreate {
+	return _c.SetUserID(v.ID)
 }
 
-// Mutation returns the UserMutation object of the builder.
-func (_c *UserCreate) Mutation() *UserMutation {
+// Mutation returns the ClientSessionMutation object of the builder.
+func (_c *ClientSessionCreate) Mutation() *ClientSessionMutation {
 	return _c.mutation
 }
 
-// Save creates the User in the database.
-func (_c *UserCreate) Save(ctx context.Context) (*User, error) {
+// Save creates the ClientSession in the database.
+func (_c *ClientSessionCreate) Save(ctx context.Context) (*ClientSession, error) {
 	return withHooks(ctx, _c.sqlSave, _c.mutation, _c.hooks)
 }
 
 // SaveX calls Save and panics if Save returns an error.
-func (_c *UserCreate) SaveX(ctx context.Context) *User {
+func (_c *ClientSessionCreate) SaveX(ctx context.Context) *ClientSession {
 	v, err := _c.Save(ctx)
 	if err != nil {
 		panic(err)
@@ -63,27 +59,30 @@ func (_c *UserCreate) SaveX(ctx context.Context) *User {
 }
 
 // Exec executes the query.
-func (_c *UserCreate) Exec(ctx context.Context) error {
+func (_c *ClientSessionCreate) Exec(ctx context.Context) error {
 	_, err := _c.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (_c *UserCreate) ExecX(ctx context.Context) {
+func (_c *ClientSessionCreate) ExecX(ctx context.Context) {
 	if err := _c.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (_c *UserCreate) check() error {
-	if _, ok := _c.mutation.Name(); !ok {
-		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "User.name"`)}
+func (_c *ClientSessionCreate) check() error {
+	if _, ok := _c.mutation.Token(); !ok {
+		return &ValidationError{Name: "token", err: errors.New(`ent: missing required field "ClientSession.token"`)}
+	}
+	if len(_c.mutation.UserIDs()) == 0 {
+		return &ValidationError{Name: "user", err: errors.New(`ent: missing required edge "ClientSession.user"`)}
 	}
 	return nil
 }
 
-func (_c *UserCreate) sqlSave(ctx context.Context) (*User, error) {
+func (_c *ClientSessionCreate) sqlSave(ctx context.Context) (*ClientSession, error) {
 	if err := _c.check(); err != nil {
 		return nil, err
 	}
@@ -101,30 +100,31 @@ func (_c *UserCreate) sqlSave(ctx context.Context) (*User, error) {
 	return _node, nil
 }
 
-func (_c *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
+func (_c *ClientSessionCreate) createSpec() (*ClientSession, *sqlgraph.CreateSpec) {
 	var (
-		_node = &User{config: _c.config}
-		_spec = sqlgraph.NewCreateSpec(user.Table, sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt))
+		_node = &ClientSession{config: _c.config}
+		_spec = sqlgraph.NewCreateSpec(clientsession.Table, sqlgraph.NewFieldSpec(clientsession.FieldID, field.TypeInt))
 	)
 	_spec.OnConflict = _c.conflict
-	if value, ok := _c.mutation.Name(); ok {
-		_spec.SetField(user.FieldName, field.TypeString, value)
-		_node.Name = value
+	if value, ok := _c.mutation.Token(); ok {
+		_spec.SetField(clientsession.FieldToken, field.TypeString, value)
+		_node.Token = value
 	}
-	if nodes := _c.mutation.ClientSessionsIDs(); len(nodes) > 0 {
+	if nodes := _c.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   user.ClientSessionsTable,
-			Columns: []string{user.ClientSessionsColumn},
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   clientsession.UserTable,
+			Columns: []string{clientsession.UserColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(clientsession.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
+		_node.user_client_sessions = &nodes[0]
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec
@@ -133,8 +133,8 @@ func (_c *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 // OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
 // of the `INSERT` statement. For example:
 //
-//	client.User.Create().
-//		SetName(v).
+//	client.ClientSession.Create().
+//		SetToken(v).
 //		OnConflict(
 //			// Update the row with the new values
 //			// the was proposed for insertion.
@@ -142,13 +142,13 @@ func (_c *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 //		).
 //		// Override some of the fields with custom
 //		// update values.
-//		Update(func(u *ent.UserUpsert) {
-//			SetName(v+v).
+//		Update(func(u *ent.ClientSessionUpsert) {
+//			SetToken(v+v).
 //		}).
 //		Exec(ctx)
-func (_c *UserCreate) OnConflict(opts ...sql.ConflictOption) *UserUpsertOne {
+func (_c *ClientSessionCreate) OnConflict(opts ...sql.ConflictOption) *ClientSessionUpsertOne {
 	_c.conflict = opts
-	return &UserUpsertOne{
+	return &ClientSessionUpsertOne{
 		create: _c,
 	}
 }
@@ -156,50 +156,50 @@ func (_c *UserCreate) OnConflict(opts ...sql.ConflictOption) *UserUpsertOne {
 // OnConflictColumns calls `OnConflict` and configures the columns
 // as conflict target. Using this option is equivalent to using:
 //
-//	client.User.Create().
+//	client.ClientSession.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-func (_c *UserCreate) OnConflictColumns(columns ...string) *UserUpsertOne {
+func (_c *ClientSessionCreate) OnConflictColumns(columns ...string) *ClientSessionUpsertOne {
 	_c.conflict = append(_c.conflict, sql.ConflictColumns(columns...))
-	return &UserUpsertOne{
+	return &ClientSessionUpsertOne{
 		create: _c,
 	}
 }
 
 type (
-	// UserUpsertOne is the builder for "upsert"-ing
-	//  one User node.
-	UserUpsertOne struct {
-		create *UserCreate
+	// ClientSessionUpsertOne is the builder for "upsert"-ing
+	//  one ClientSession node.
+	ClientSessionUpsertOne struct {
+		create *ClientSessionCreate
 	}
 
-	// UserUpsert is the "OnConflict" setter.
-	UserUpsert struct {
+	// ClientSessionUpsert is the "OnConflict" setter.
+	ClientSessionUpsert struct {
 		*sql.UpdateSet
 	}
 )
 
-// SetName sets the "name" field.
-func (u *UserUpsert) SetName(v string) *UserUpsert {
-	u.Set(user.FieldName, v)
+// SetToken sets the "token" field.
+func (u *ClientSessionUpsert) SetToken(v string) *ClientSessionUpsert {
+	u.Set(clientsession.FieldToken, v)
 	return u
 }
 
-// UpdateName sets the "name" field to the value that was provided on create.
-func (u *UserUpsert) UpdateName() *UserUpsert {
-	u.SetExcluded(user.FieldName)
+// UpdateToken sets the "token" field to the value that was provided on create.
+func (u *ClientSessionUpsert) UpdateToken() *ClientSessionUpsert {
+	u.SetExcluded(clientsession.FieldToken)
 	return u
 }
 
 // UpdateNewValues updates the mutable fields using the new values that were set on create.
 // Using this option is equivalent to using:
 //
-//	client.User.Create().
+//	client.ClientSession.Create().
 //		OnConflict(
 //			sql.ResolveWithNewValues(),
 //		).
 //		Exec(ctx)
-func (u *UserUpsertOne) UpdateNewValues() *UserUpsertOne {
+func (u *ClientSessionUpsertOne) UpdateNewValues() *ClientSessionUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	return u
 }
@@ -207,61 +207,61 @@ func (u *UserUpsertOne) UpdateNewValues() *UserUpsertOne {
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//	client.User.Create().
+//	client.ClientSession.Create().
 //	    OnConflict(sql.ResolveWithIgnore()).
 //	    Exec(ctx)
-func (u *UserUpsertOne) Ignore() *UserUpsertOne {
+func (u *ClientSessionUpsertOne) Ignore() *ClientSessionUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
 }
 
 // DoNothing configures the conflict_action to `DO NOTHING`.
 // Supported only by SQLite and PostgreSQL.
-func (u *UserUpsertOne) DoNothing() *UserUpsertOne {
+func (u *ClientSessionUpsertOne) DoNothing() *ClientSessionUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.DoNothing())
 	return u
 }
 
-// Update allows overriding fields `UPDATE` values. See the UserCreate.OnConflict
+// Update allows overriding fields `UPDATE` values. See the ClientSessionCreate.OnConflict
 // documentation for more info.
-func (u *UserUpsertOne) Update(set func(*UserUpsert)) *UserUpsertOne {
+func (u *ClientSessionUpsertOne) Update(set func(*ClientSessionUpsert)) *ClientSessionUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
-		set(&UserUpsert{UpdateSet: update})
+		set(&ClientSessionUpsert{UpdateSet: update})
 	}))
 	return u
 }
 
-// SetName sets the "name" field.
-func (u *UserUpsertOne) SetName(v string) *UserUpsertOne {
-	return u.Update(func(s *UserUpsert) {
-		s.SetName(v)
+// SetToken sets the "token" field.
+func (u *ClientSessionUpsertOne) SetToken(v string) *ClientSessionUpsertOne {
+	return u.Update(func(s *ClientSessionUpsert) {
+		s.SetToken(v)
 	})
 }
 
-// UpdateName sets the "name" field to the value that was provided on create.
-func (u *UserUpsertOne) UpdateName() *UserUpsertOne {
-	return u.Update(func(s *UserUpsert) {
-		s.UpdateName()
+// UpdateToken sets the "token" field to the value that was provided on create.
+func (u *ClientSessionUpsertOne) UpdateToken() *ClientSessionUpsertOne {
+	return u.Update(func(s *ClientSessionUpsert) {
+		s.UpdateToken()
 	})
 }
 
 // Exec executes the query.
-func (u *UserUpsertOne) Exec(ctx context.Context) error {
+func (u *ClientSessionUpsertOne) Exec(ctx context.Context) error {
 	if len(u.create.conflict) == 0 {
-		return errors.New("ent: missing options for UserCreate.OnConflict")
+		return errors.New("ent: missing options for ClientSessionCreate.OnConflict")
 	}
 	return u.create.Exec(ctx)
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (u *UserUpsertOne) ExecX(ctx context.Context) {
+func (u *ClientSessionUpsertOne) ExecX(ctx context.Context) {
 	if err := u.create.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // Exec executes the UPSERT query and returns the inserted/updated ID.
-func (u *UserUpsertOne) ID(ctx context.Context) (id int, err error) {
+func (u *ClientSessionUpsertOne) ID(ctx context.Context) (id int, err error) {
 	node, err := u.create.Save(ctx)
 	if err != nil {
 		return id, err
@@ -270,7 +270,7 @@ func (u *UserUpsertOne) ID(ctx context.Context) (id int, err error) {
 }
 
 // IDX is like ID, but panics if an error occurs.
-func (u *UserUpsertOne) IDX(ctx context.Context) int {
+func (u *ClientSessionUpsertOne) IDX(ctx context.Context) int {
 	id, err := u.ID(ctx)
 	if err != nil {
 		panic(err)
@@ -278,27 +278,27 @@ func (u *UserUpsertOne) IDX(ctx context.Context) int {
 	return id
 }
 
-// UserCreateBulk is the builder for creating many User entities in bulk.
-type UserCreateBulk struct {
+// ClientSessionCreateBulk is the builder for creating many ClientSession entities in bulk.
+type ClientSessionCreateBulk struct {
 	config
 	err      error
-	builders []*UserCreate
+	builders []*ClientSessionCreate
 	conflict []sql.ConflictOption
 }
 
-// Save creates the User entities in the database.
-func (_c *UserCreateBulk) Save(ctx context.Context) ([]*User, error) {
+// Save creates the ClientSession entities in the database.
+func (_c *ClientSessionCreateBulk) Save(ctx context.Context) ([]*ClientSession, error) {
 	if _c.err != nil {
 		return nil, _c.err
 	}
 	specs := make([]*sqlgraph.CreateSpec, len(_c.builders))
-	nodes := make([]*User, len(_c.builders))
+	nodes := make([]*ClientSession, len(_c.builders))
 	mutators := make([]Mutator, len(_c.builders))
 	for i := range _c.builders {
 		func(i int, root context.Context) {
 			builder := _c.builders[i]
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-				mutation, ok := m.(*UserMutation)
+				mutation, ok := m.(*ClientSessionMutation)
 				if !ok {
 					return nil, fmt.Errorf("unexpected mutation type %T", m)
 				}
@@ -346,7 +346,7 @@ func (_c *UserCreateBulk) Save(ctx context.Context) ([]*User, error) {
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (_c *UserCreateBulk) SaveX(ctx context.Context) []*User {
+func (_c *ClientSessionCreateBulk) SaveX(ctx context.Context) []*ClientSession {
 	v, err := _c.Save(ctx)
 	if err != nil {
 		panic(err)
@@ -355,13 +355,13 @@ func (_c *UserCreateBulk) SaveX(ctx context.Context) []*User {
 }
 
 // Exec executes the query.
-func (_c *UserCreateBulk) Exec(ctx context.Context) error {
+func (_c *ClientSessionCreateBulk) Exec(ctx context.Context) error {
 	_, err := _c.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (_c *UserCreateBulk) ExecX(ctx context.Context) {
+func (_c *ClientSessionCreateBulk) ExecX(ctx context.Context) {
 	if err := _c.Exec(ctx); err != nil {
 		panic(err)
 	}
@@ -370,7 +370,7 @@ func (_c *UserCreateBulk) ExecX(ctx context.Context) {
 // OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
 // of the `INSERT` statement. For example:
 //
-//	client.User.CreateBulk(builders...).
+//	client.ClientSession.CreateBulk(builders...).
 //		OnConflict(
 //			// Update the row with the new values
 //			// the was proposed for insertion.
@@ -378,13 +378,13 @@ func (_c *UserCreateBulk) ExecX(ctx context.Context) {
 //		).
 //		// Override some of the fields with custom
 //		// update values.
-//		Update(func(u *ent.UserUpsert) {
-//			SetName(v+v).
+//		Update(func(u *ent.ClientSessionUpsert) {
+//			SetToken(v+v).
 //		}).
 //		Exec(ctx)
-func (_c *UserCreateBulk) OnConflict(opts ...sql.ConflictOption) *UserUpsertBulk {
+func (_c *ClientSessionCreateBulk) OnConflict(opts ...sql.ConflictOption) *ClientSessionUpsertBulk {
 	_c.conflict = opts
-	return &UserUpsertBulk{
+	return &ClientSessionUpsertBulk{
 		create: _c,
 	}
 }
@@ -392,31 +392,31 @@ func (_c *UserCreateBulk) OnConflict(opts ...sql.ConflictOption) *UserUpsertBulk
 // OnConflictColumns calls `OnConflict` and configures the columns
 // as conflict target. Using this option is equivalent to using:
 //
-//	client.User.Create().
+//	client.ClientSession.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-func (_c *UserCreateBulk) OnConflictColumns(columns ...string) *UserUpsertBulk {
+func (_c *ClientSessionCreateBulk) OnConflictColumns(columns ...string) *ClientSessionUpsertBulk {
 	_c.conflict = append(_c.conflict, sql.ConflictColumns(columns...))
-	return &UserUpsertBulk{
+	return &ClientSessionUpsertBulk{
 		create: _c,
 	}
 }
 
-// UserUpsertBulk is the builder for "upsert"-ing
-// a bulk of User nodes.
-type UserUpsertBulk struct {
-	create *UserCreateBulk
+// ClientSessionUpsertBulk is the builder for "upsert"-ing
+// a bulk of ClientSession nodes.
+type ClientSessionUpsertBulk struct {
+	create *ClientSessionCreateBulk
 }
 
 // UpdateNewValues updates the mutable fields using the new values that
 // were set on create. Using this option is equivalent to using:
 //
-//	client.User.Create().
+//	client.ClientSession.Create().
 //		OnConflict(
 //			sql.ResolveWithNewValues(),
 //		).
 //		Exec(ctx)
-func (u *UserUpsertBulk) UpdateNewValues() *UserUpsertBulk {
+func (u *ClientSessionUpsertBulk) UpdateNewValues() *ClientSessionUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	return u
 }
@@ -424,62 +424,62 @@ func (u *UserUpsertBulk) UpdateNewValues() *UserUpsertBulk {
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//	client.User.Create().
+//	client.ClientSession.Create().
 //		OnConflict(sql.ResolveWithIgnore()).
 //		Exec(ctx)
-func (u *UserUpsertBulk) Ignore() *UserUpsertBulk {
+func (u *ClientSessionUpsertBulk) Ignore() *ClientSessionUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
 }
 
 // DoNothing configures the conflict_action to `DO NOTHING`.
 // Supported only by SQLite and PostgreSQL.
-func (u *UserUpsertBulk) DoNothing() *UserUpsertBulk {
+func (u *ClientSessionUpsertBulk) DoNothing() *ClientSessionUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.DoNothing())
 	return u
 }
 
-// Update allows overriding fields `UPDATE` values. See the UserCreateBulk.OnConflict
+// Update allows overriding fields `UPDATE` values. See the ClientSessionCreateBulk.OnConflict
 // documentation for more info.
-func (u *UserUpsertBulk) Update(set func(*UserUpsert)) *UserUpsertBulk {
+func (u *ClientSessionUpsertBulk) Update(set func(*ClientSessionUpsert)) *ClientSessionUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
-		set(&UserUpsert{UpdateSet: update})
+		set(&ClientSessionUpsert{UpdateSet: update})
 	}))
 	return u
 }
 
-// SetName sets the "name" field.
-func (u *UserUpsertBulk) SetName(v string) *UserUpsertBulk {
-	return u.Update(func(s *UserUpsert) {
-		s.SetName(v)
+// SetToken sets the "token" field.
+func (u *ClientSessionUpsertBulk) SetToken(v string) *ClientSessionUpsertBulk {
+	return u.Update(func(s *ClientSessionUpsert) {
+		s.SetToken(v)
 	})
 }
 
-// UpdateName sets the "name" field to the value that was provided on create.
-func (u *UserUpsertBulk) UpdateName() *UserUpsertBulk {
-	return u.Update(func(s *UserUpsert) {
-		s.UpdateName()
+// UpdateToken sets the "token" field to the value that was provided on create.
+func (u *ClientSessionUpsertBulk) UpdateToken() *ClientSessionUpsertBulk {
+	return u.Update(func(s *ClientSessionUpsert) {
+		s.UpdateToken()
 	})
 }
 
 // Exec executes the query.
-func (u *UserUpsertBulk) Exec(ctx context.Context) error {
+func (u *ClientSessionUpsertBulk) Exec(ctx context.Context) error {
 	if u.create.err != nil {
 		return u.create.err
 	}
 	for i, b := range u.create.builders {
 		if len(b.conflict) != 0 {
-			return fmt.Errorf("ent: OnConflict was set for builder %d. Set it on the UserCreateBulk instead", i)
+			return fmt.Errorf("ent: OnConflict was set for builder %d. Set it on the ClientSessionCreateBulk instead", i)
 		}
 	}
 	if len(u.create.conflict) == 0 {
-		return errors.New("ent: missing options for UserCreateBulk.OnConflict")
+		return errors.New("ent: missing options for ClientSessionCreateBulk.OnConflict")
 	}
 	return u.create.Exec(ctx)
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (u *UserUpsertBulk) ExecX(ctx context.Context) {
+func (u *ClientSessionUpsertBulk) ExecX(ctx context.Context) {
 	if err := u.create.Exec(ctx); err != nil {
 		panic(err)
 	}
