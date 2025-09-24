@@ -9,7 +9,11 @@ import (
 )
 
 type SignupParams struct {
-	UserName string `json:"name"`
+	UserName string `json:"userName"`
+}
+
+type SignupResponse struct {
+	User *serializers.UserSerializer `json:"user"`
 }
 
 func (c *Controller) Signup(w http.ResponseWriter, r *http.Request) {
@@ -28,6 +32,8 @@ func (c *Controller) Signup(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	serializer := serializers.NewUserSerializer(user)
-	c.renderJson(w, serializer)
+	response := SignupResponse{
+		User: serializers.NewUserSerializer(user),
+	}
+	c.renderJson(w, response)
 }

@@ -18,10 +18,10 @@ func NewController(entClient *ent.Client) *Controller {
 	}
 }
 
-func (c *Controller) renderJson(w http.ResponseWriter, serializer interface{}) {
+func (c *Controller) renderJson(w http.ResponseWriter, response interface{}) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 
-	data, err := json.Marshal(serializer)
+	data, err := json.Marshal(response)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

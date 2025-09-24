@@ -9,7 +9,6 @@ import (
 	"testing"
 
 	"github.com/sijiaoh/go-godot-template/api_server/controllers"
-	"github.com/sijiaoh/go-godot-template/api_server/serializers"
 	"github.com/sijiaoh/go-godot-template/api_server/testutils"
 )
 
@@ -36,9 +35,9 @@ func TestSignup(t *testing.T) {
 	testutils.AssertResponseCode(t, response.Code, http.StatusCreated)
 	testutils.AssertRecordCount(t, entClient.User.Query(), context.Background(), 1)
 
-	var res serializers.UserSerializer
+	var res controllers.SignupResponse
 	json.Unmarshal(response.Body.Bytes(), &res)
-	testutils.AssertEqual(t, res.Name, params.UserName)
+	testutils.AssertEqual(t, res.User.Name, params.UserName)
 }
 
 func TestSignup_BadRequest(t *testing.T) {
