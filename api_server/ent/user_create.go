@@ -70,18 +70,8 @@ func (_c *UserCreate) check() error {
 	if _, ok := _c.mutation.Name(); !ok {
 		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "User.name"`)}
 	}
-	if v, ok := _c.mutation.Name(); ok {
-		if err := user.NameValidator(v); err != nil {
-			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "User.name": %w`, err)}
-		}
-	}
 	if _, ok := _c.mutation.Token(); !ok {
 		return &ValidationError{Name: "token", err: errors.New(`ent: missing required field "User.token"`)}
-	}
-	if v, ok := _c.mutation.Token(); ok {
-		if err := user.TokenValidator(v); err != nil {
-			return &ValidationError{Name: "token", err: fmt.Errorf(`ent: validator failed for field "User.token": %w`, err)}
-		}
 	}
 	return nil
 }
