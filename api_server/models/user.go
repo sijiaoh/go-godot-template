@@ -11,6 +11,8 @@ type User struct {
 
 	ID   int
 	Name string `validate:"min_runes=1,max_runes=12"`
+
+	ClientSessions []*ClientSession
 }
 
 func NewUser(name string) *User {
@@ -51,6 +53,20 @@ func (u *User) Save(deps *utils.Deps) error {
 
 	u.ID = entUser.ID
 	u.EntUser = entUser
+
+	return nil
+}
+
+func (u *User) LoadClientSessions(deps *utils.Deps) error {
+	entClientSessions, err := deps.EntClient.User.QueryClientSessions(u.EntUser).All(deps.Ctx)
+	if err != nil {
+		return err
+	}
+
+	for _, ecs := range entClientSessions {
+		cs := NewClientSessionFromEnt(ecs, u)
+		u.ClientSessions = append(u.ClientSessions, cs)
+	}
 
 	return nil
 }
