@@ -15,17 +15,21 @@ type ClientSession struct {
 	User *User
 }
 
-func NewClientSession(user *User) (*ClientSession, error) {
-	cs := &ClientSession{
-		User: user,
-	}
-
+func CreateClientSession(deps *utils.Deps, user *User) (*ClientSession, error) {
 	uuidv7, err := uuid.NewV7()
 	if err != nil {
 		return nil, err
 	}
-	cs.Token = uuidv7.String()
 
+	entCS, err := deps.EntClient.ClientSession.Create().
+		SetToken(uuidv7.String()).
+		SetUserID(user.ID).
+		Save(deps.Ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	cs := NewClientSessionFromEnt(entCS, user)
 	return cs, nil
 }
 
