@@ -25,7 +25,7 @@ func (c *Controller) Signup(w http.ResponseWriter, r *http.Request) {
 	}
 
 	user := models.NewUser(params.UserName)
-	err = user.Upsert(deps)
+	err = user.Save(deps)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return

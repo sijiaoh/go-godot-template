@@ -1,17 +1,16 @@
 package models
 
 import (
-	"github.com/google/uuid"
 	"github.com/sijiaoh/go-godot-template/api_server/ent"
-	ent_user "github.com/sijiaoh/go-godot-template/api_server/ent/user"
 	"github.com/sijiaoh/go-godot-template/api_server/utils"
 	"github.com/sijiaoh/go-godot-template/api_server/validators"
 )
 
 type User struct {
-	ID    int
-	Name  string `validate:"min_runes=1,max_runes=12"`
-	Token string
+	EntUser *ent.User
+
+	ID   int
+	Name string `validate:"min_runes=1,max_runes=12"`
 }
 
 func NewUser(name string) *User {
@@ -22,45 +21,36 @@ func NewUser(name string) *User {
 
 func NewUserFromEnt(entUser *ent.User) *User {
 	return &User{
-		ID:    entUser.ID,
-		Name:  entUser.Name,
-		Token: entUser.Token,
+		EntUser: entUser,
+
+		ID:   entUser.ID,
+		Name: entUser.Name,
 	}
 }
 
-func FindUserByToken(deps *utils.Deps, token string) (*User, error) {
-	entUser, err := deps.EntClient.User.Query().Where(ent_user.TokenEQ(token)).Only(deps.Ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	return NewUserFromEnt(entUser), nil
-}
-
-func (u *User) Upsert(deps *utils.Deps) error {
-	if u.Token == "" {
-		uuidv7, err := uuid.NewV7()
-		if err != nil {
-			return err
-		}
-		u.Token = uuidv7.String()
-	}
-
+func (u *User) Save(deps *utils.Deps) error {
 	err := validators.Validate().Struct(u)
 	if err != nil {
 		return err
 	}
 
-	id, err := deps.EntClient.User.Create().
-		SetName(u.Name).
-		SetToken(u.Token).
-		OnConflict().
-		UpdateNewValues().
-		ID(deps.Ctx)
+	entUser, err := utils.Save(
+		deps,
+		u.EntUser,
+		func() *ent.UserCreate { return deps.EntClient.User.Create() },
+		func() *ent.UserUpdateOne { return u.EntUser.Update() },
+		func(mutation *ent.UserMutation) {
+			if u.EntUser == nil || u.Name != u.EntUser.Name {
+				mutation.SetName(u.Name)
+			}
+		},
+	)
 	if err != nil {
 		return err
 	}
-	u.ID = id
+
+	u.ID = entUser.ID
+	u.EntUser = entUser
 
 	return nil
 }

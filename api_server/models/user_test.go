@@ -7,22 +7,18 @@ import (
 	"github.com/sijiaoh/go-godot-template/api_server/testutils"
 )
 
-func TestUser_Upsert_Create(t *testing.T) {
+func TestUser_Save_Create(t *testing.T) {
 	deps := testutils.NewTestDeps()
 	defer deps.Close()
 
 	user := models.NewUser("Foo")
-	err := user.Upsert(&deps.Deps)
+	err := user.Save(&deps.Deps)
 	testutils.AssertNoError(t, err)
 
 	testutils.AssertRecordCount(t, deps.EntClient.User.Query(), deps.Ctx, 1)
-
-	if len(user.Token) == 0 {
-		t.Fatal("用户的Token生成失败")
-	}
 }
 
-func TestUser_Upsert_Update(t *testing.T) {
+func TestUser_Save_Update(t *testing.T) {
 	deps := testutils.NewTestDeps()
 	defer deps.Close()
 
@@ -31,7 +27,7 @@ func TestUser_Upsert_Update(t *testing.T) {
 	newName := "Bar"
 	user.Name = newName
 
-	err := user.Upsert(&deps.Deps)
+	err := user.Save(&deps.Deps)
 	testutils.AssertNoError(t, err)
 
 	testutils.AssertRecordCount(t, deps.EntClient.User.Query(), deps.Ctx, 1)
@@ -43,7 +39,7 @@ func TestUser_Upsert_Update(t *testing.T) {
 
 func CreateFooUser(t *testing.T, deps *testutils.TestDeps) *models.User {
 	user := models.NewUser("Foo")
-	err := user.Upsert(&deps.Deps)
+	err := user.Save(&deps.Deps)
 	testutils.AssertNoError(t, err)
 	return user
 }
