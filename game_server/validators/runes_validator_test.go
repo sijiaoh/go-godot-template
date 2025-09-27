@@ -3,7 +3,7 @@ package validators_test
 import (
 	"testing"
 
-	"github.com/sijiaoh/go-godot-template/api_server/validators"
+	"github.com/sijiaoh/go-godot-template/game_server/validators"
 )
 
 type RunesTestStruct struct {

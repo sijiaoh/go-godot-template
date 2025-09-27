@@ -8,8 +8,8 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/sijiaoh/go-godot-template/api_server/ent/predicate"
-	"github.com/sijiaoh/go-godot-template/api_server/ent/user"
+	"github.com/sijiaoh/go-godot-template/game_server/ent/predicate"
+	"github.com/sijiaoh/go-godot-template/game_server/ent/user"
 )
 
 // UserDelete is the builder for deleting a User entity.

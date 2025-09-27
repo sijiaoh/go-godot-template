@@ -1,11 +1,11 @@
 package utils_test
 
 import (
-	"github.com/sijiaoh/go-godot-template/api_server/ent"
-	"github.com/sijiaoh/go-godot-template/api_server/models"
-	"github.com/sijiaoh/go-godot-template/api_server/testutils"
-	"github.com/sijiaoh/go-godot-template/api_server/utils"
-	"github.com/sijiaoh/go-godot-template/api_server/validators"
+	"github.com/sijiaoh/go-godot-template/game_server/ent"
+	"github.com/sijiaoh/go-godot-template/game_server/models"
+	"github.com/sijiaoh/go-godot-template/game_server/testutils"
+	"github.com/sijiaoh/go-godot-template/game_server/utils"
+	"github.com/sijiaoh/go-godot-template/game_server/validators"
 )
 
 func ExampleSave() {

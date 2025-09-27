@@ -2,8 +2,8 @@ package models
 
 import (
 	"github.com/google/uuid"
-	"github.com/sijiaoh/go-godot-template/api_server/ent"
-	"github.com/sijiaoh/go-godot-template/api_server/utils"
+	"github.com/sijiaoh/go-godot-template/game_server/ent"
+	"github.com/sijiaoh/go-godot-template/game_server/utils"
 )
 
 type ClientSession struct {

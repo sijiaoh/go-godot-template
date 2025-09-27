@@ -1,9 +1,9 @@
 package models
 
 import (
-	"github.com/sijiaoh/go-godot-template/api_server/ent"
-	"github.com/sijiaoh/go-godot-template/api_server/utils"
-	"github.com/sijiaoh/go-godot-template/api_server/validators"
+	"github.com/sijiaoh/go-godot-template/game_server/ent"
+	"github.com/sijiaoh/go-godot-template/game_server/utils"
+	"github.com/sijiaoh/go-godot-template/game_server/validators"
 )
 
 type User struct {

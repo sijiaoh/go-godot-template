@@ -1,6 +1,6 @@
 package serializers
 
-import "github.com/sijiaoh/go-godot-template/api_server/models"
+import "github.com/sijiaoh/go-godot-template/game_server/models"
 
 type ClientSessionSerializer struct {
 	Token string `json:"token"`

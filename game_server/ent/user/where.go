@@ -5,7 +5,7 @@ package user
 import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
-	"github.com/sijiaoh/go-godot-template/api_server/ent/predicate"
+	"github.com/sijiaoh/go-godot-template/game_server/ent/predicate"
 )
 
 // ID filters vertices based on their ID field.

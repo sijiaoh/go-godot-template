@@ -6,7 +6,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/sijiaoh/go-godot-template/api_server/ent"
+	"github.com/sijiaoh/go-godot-template/game_server/ent"
 )
 
 // The ClientSessionFunc type is an adapter to allow the use of ordinary

@@ -8,8 +8,8 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
-	"github.com/sijiaoh/go-godot-template/api_server/ent/clientsession"
-	"github.com/sijiaoh/go-godot-template/api_server/ent/user"
+	"github.com/sijiaoh/go-godot-template/game_server/ent/clientsession"
+	"github.com/sijiaoh/go-godot-template/game_server/ent/user"
 )
 
 // ClientSession is the model entity for the ClientSession schema.

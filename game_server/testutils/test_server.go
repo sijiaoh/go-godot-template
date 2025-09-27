@@ -2,9 +2,9 @@ package testutils
 
 import (
 	"github.com/go-chi/chi/v5"
-	"github.com/sijiaoh/go-godot-template/api_server/ent"
-	"github.com/sijiaoh/go-godot-template/api_server/repositories"
-	"github.com/sijiaoh/go-godot-template/api_server/routes"
+	"github.com/sijiaoh/go-godot-template/game_server/ent"
+	"github.com/sijiaoh/go-godot-template/game_server/repositories"
+	"github.com/sijiaoh/go-godot-template/game_server/routes"
 )
 
 type TestServer struct {

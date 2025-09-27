@@ -1,6 +1,6 @@
 package serializers
 
-import "github.com/sijiaoh/go-godot-template/api_server/models"
+import "github.com/sijiaoh/go-godot-template/game_server/models"
 
 type UserSerializer struct {
 	ID   int    `json:"id"`

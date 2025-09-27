@@ -3,8 +3,8 @@ package testutils
 import (
 	"context"
 
-	"github.com/sijiaoh/go-godot-template/api_server/repositories"
-	"github.com/sijiaoh/go-godot-template/api_server/utils"
+	"github.com/sijiaoh/go-godot-template/game_server/repositories"
+	"github.com/sijiaoh/go-godot-template/game_server/utils"
 )
 
 type TestDeps struct {

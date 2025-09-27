@@ -3,8 +3,8 @@ package main
 import (
 	"net/http"
 
-	"github.com/sijiaoh/go-godot-template/api_server/repositories"
-	"github.com/sijiaoh/go-godot-template/api_server/routes"
+	"github.com/sijiaoh/go-godot-template/game_server/repositories"
+	"github.com/sijiaoh/go-godot-template/game_server/routes"
 )
 
 func main() {

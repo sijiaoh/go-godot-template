@@ -9,14 +9,14 @@ import (
 	"log"
 	"reflect"
 
-	"github.com/sijiaoh/go-godot-template/api_server/ent/migrate"
+	"github.com/sijiaoh/go-godot-template/game_server/ent/migrate"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
-	"github.com/sijiaoh/go-godot-template/api_server/ent/clientsession"
-	"github.com/sijiaoh/go-godot-template/api_server/ent/user"
+	"github.com/sijiaoh/go-godot-template/game_server/ent/clientsession"
+	"github.com/sijiaoh/go-godot-template/game_server/ent/user"
 )
 
 // Client is the client that holds all ent builders.

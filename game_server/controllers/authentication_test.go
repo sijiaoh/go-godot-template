@@ -8,9 +8,9 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/sijiaoh/go-godot-template/api_server/controllers"
-	"github.com/sijiaoh/go-godot-template/api_server/serializers"
-	"github.com/sijiaoh/go-godot-template/api_server/testutils"
+	"github.com/sijiaoh/go-godot-template/game_server/controllers"
+	"github.com/sijiaoh/go-godot-template/game_server/serializers"
+	"github.com/sijiaoh/go-godot-template/game_server/testutils"
 )
 
 func TestSignup(t *testing.T) {

@@ -3,7 +3,7 @@ package testutils
 import (
 	"testing"
 
-	"github.com/sijiaoh/go-godot-template/api_server/utils"
+	"github.com/sijiaoh/go-godot-template/game_server/utils"
 )
 
 func AssertNoError(t *testing.T, err error) {

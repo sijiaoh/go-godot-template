@@ -3,8 +3,8 @@ package models_test
 import (
 	"testing"
 
-	"github.com/sijiaoh/go-godot-template/api_server/models"
-	"github.com/sijiaoh/go-godot-template/api_server/testutils"
+	"github.com/sijiaoh/go-godot-template/game_server/models"
+	"github.com/sijiaoh/go-godot-template/game_server/testutils"
 )
 
 func TestUser_Save_Create(t *testing.T) {

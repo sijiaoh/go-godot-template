@@ -1,4 +1,4 @@
-module github.com/sijiaoh/go-godot-template/api_server
+module github.com/sijiaoh/go-godot-template/game_server
 
 go 1.25.1
 

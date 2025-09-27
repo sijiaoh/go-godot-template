@@ -3,7 +3,7 @@ package repositories
 import (
 	"context"
 
-	"github.com/sijiaoh/go-godot-template/api_server/ent"
+	"github.com/sijiaoh/go-godot-template/game_server/ent"
 
 	_ "github.com/mattn/go-sqlite3"
 )

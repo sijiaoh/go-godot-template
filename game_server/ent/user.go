@@ -8,7 +8,7 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
-	"github.com/sijiaoh/go-godot-template/api_server/ent/user"
+	"github.com/sijiaoh/go-godot-template/game_server/ent/user"
 )
 
 // User is the model entity for the User schema.

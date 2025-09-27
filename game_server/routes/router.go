@@ -5,8 +5,8 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
-	"github.com/sijiaoh/go-godot-template/api_server/controllers"
-	"github.com/sijiaoh/go-godot-template/api_server/ent"
+	"github.com/sijiaoh/go-godot-template/game_server/controllers"
+	"github.com/sijiaoh/go-godot-template/game_server/ent"
 )
 
 func NewRouter(entClient *ent.Client) *chi.Mux {

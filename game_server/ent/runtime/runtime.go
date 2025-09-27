@@ -2,7 +2,7 @@
 
 package runtime
 
-// The schema-stitching logic is generated in github.com/sijiaoh/go-godot-template/api_server/ent/runtime.go
+// The schema-stitching logic is generated in github.com/sijiaoh/go-godot-template/game_server/ent/runtime.go
 
 const (
 	Version = "v0.14.5"                                         // Version of ent codegen.

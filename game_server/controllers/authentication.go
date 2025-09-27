@@ -3,9 +3,9 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/sijiaoh/go-godot-template/api_server/models"
-	"github.com/sijiaoh/go-godot-template/api_server/serializers"
-	"github.com/sijiaoh/go-godot-template/api_server/utils"
+	"github.com/sijiaoh/go-godot-template/game_server/models"
+	"github.com/sijiaoh/go-godot-template/game_server/serializers"
+	"github.com/sijiaoh/go-godot-template/game_server/utils"
 )
 
 type SignupParams struct {

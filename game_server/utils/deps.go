@@ -3,7 +3,7 @@ package utils
 import (
 	"context"
 
-	"github.com/sijiaoh/go-godot-template/api_server/ent"
+	"github.com/sijiaoh/go-godot-template/game_server/ent"
 )
 
 type Deps struct {

@@ -10,8 +10,8 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/sijiaoh/go-godot-template/api_server/ent/clientsession"
-	"github.com/sijiaoh/go-godot-template/api_server/ent/user"
+	"github.com/sijiaoh/go-godot-template/game_server/ent/clientsession"
+	"github.com/sijiaoh/go-godot-template/game_server/ent/user"
 )
 
 // ClientSessionCreate is the builder for creating a ClientSession entity.

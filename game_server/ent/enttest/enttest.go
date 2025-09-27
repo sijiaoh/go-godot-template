@@ -5,12 +5,12 @@ package enttest
 import (
 	"context"
 
-	"github.com/sijiaoh/go-godot-template/api_server/ent"
+	"github.com/sijiaoh/go-godot-template/game_server/ent"
 	// required by schema hooks.
-	_ "github.com/sijiaoh/go-godot-template/api_server/ent/runtime"
+	_ "github.com/sijiaoh/go-godot-template/game_server/ent/runtime"
 
 	"entgo.io/ent/dialect/sql/schema"
-	"github.com/sijiaoh/go-godot-template/api_server/ent/migrate"
+	"github.com/sijiaoh/go-godot-template/game_server/ent/migrate"
 )
 
 type (
