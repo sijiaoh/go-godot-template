@@ -1,0 +1,12 @@
+root = true
+
+[*]
+charset = utf-8
+
+[*.gd]
+indent_size = 4
+indent_style = tab
+
+[*.dialogue]
+indent_size = 4
+indent_style = tab
