@@ -4,26 +4,26 @@ on:
     branches:
       - main
     paths:
-      - "api_server/**"
-      - ".github/workflows/api_server_ci.yml"
+      - "game_server/**"
+      - ".github/workflows/game_server_ci.yml"
   pull_request:
     paths:
-      - "api_server/**"
-      - ".github/workflows/api_server_ci.yml"
+      - "game_server/**"
+      - ".github/workflows/game_server_ci.yml"
 jobs:
   test:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./api_server
+        working-directory: ./game_server
 
     steps:
       - uses: actions/checkout@v5
 
       - uses: actions/setup-go@v6
         with:
-          go-version-file: "api_server/go.mod"
-          cache-dependency-path: "api_server/go.sum"
+          go-version-file: "game_server/go.mod"
+          cache-dependency-path: "game_server/go.sum"
 
       - name: Run tests
         run: go test ./...
