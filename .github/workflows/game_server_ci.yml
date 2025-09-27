@@ -1,4 +1,4 @@
-name: Api Server CI
+name: Game Server CI
 on:
   push:
     branches:
