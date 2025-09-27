@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://bke5ijixx6o70"]
+
+[ext_resource type="Script" uid="uid://nahrl3i0rysp" path="res://screen/screen_manager.gd" id="1_ig7tw"]
+
+[node name="Main" type="Node2D"]
+
+[node name="Managers" type="Node" parent="."]
+
+[node name="ScreenManager" type="Node" parent="Managers" node_paths=PackedStringArray("_screens_node")]
+script = ExtResource("1_ig7tw")
+_screens_node = NodePath("../../Scenes")
+metadata/_custom_type_script = "uid://nahrl3i0rysp"
+
+[node name="Scenes" type="Node" parent="."]
