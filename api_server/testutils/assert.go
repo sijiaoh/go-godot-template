@@ -1,10 +1,8 @@
 package testutils
 
 import (
-	"context"
 	"testing"
 
-	"github.com/sijiaoh/go-godot-template/api_server/ent"
 	"github.com/sijiaoh/go-godot-template/api_server/utils"
 )
 
@@ -14,7 +12,7 @@ func AssertNoError(t *testing.T, err error) {
 	}
 }
 
-func AssertEqual(t *testing.T, got, expected interface{}) {
+func AssertEqual[T comparable](t *testing.T, got, expected T) {
 	if got != expected {
 		t.Fatalf("expected %v, got %v", expected, got)
 	}
@@ -23,16 +21,6 @@ func AssertEqual(t *testing.T, got, expected interface{}) {
 func AssertStrPtrEqual(t *testing.T, got, expected *string) {
 	if !utils.StrPtrEq(got, expected) {
 		t.Fatalf("expected %v, got %v", expected, got)
-	}
-}
-
-func AssertRecordCount(t *testing.T, userQuery *ent.UserQuery, ctx context.Context, expectedCount int) {
-	count, err := userQuery.Count(ctx)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if count != expectedCount {
-		t.Fatalf("expected record count %d, got %d", expectedCount, count)
 	}
 }
 

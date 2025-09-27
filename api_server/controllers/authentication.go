@@ -12,10 +12,6 @@ type SignupParams struct {
 	UserName string `json:"userName"`
 }
 
-type SignupResponse struct {
-	User *serializers.UserSerializer `json:"user"`
-}
-
 func (c *Controller) Signup(w http.ResponseWriter, r *http.Request) {
 	deps := utils.NewDeps(c.entClient, r.Context())
 
@@ -32,8 +28,12 @@ func (c *Controller) Signup(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	response := SignupResponse{
-		User: serializers.NewUserSerializer(user),
+
+	cs, err := models.CreateClientSession(deps, user)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
-	c.renderJson(w, response)
+
+	c.renderJson(w, serializers.NewClientSessionSerializer(cs))
 }

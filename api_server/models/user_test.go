@@ -15,7 +15,7 @@ func TestUser_Save_Create(t *testing.T) {
 	err := user.Save(&deps.Deps)
 	testutils.AssertNoError(t, err)
 
-	testutils.AssertRecordCount(t, deps.EntClient.User.Query(), deps.Ctx, 1)
+	testutils.AssertEqual(t, deps.EntClient.User.Query().CountX(deps.Ctx), 1)
 }
 
 func TestUser_Save_Update(t *testing.T) {
@@ -30,7 +30,7 @@ func TestUser_Save_Update(t *testing.T) {
 	err := user.Save(&deps.Deps)
 	testutils.AssertNoError(t, err)
 
-	testutils.AssertRecordCount(t, deps.EntClient.User.Query(), deps.Ctx, 1)
+	testutils.AssertEqual(t, deps.EntClient.User.Query().CountX(deps.Ctx), 1)
 
 	newEntUser, err := deps.EntClient.User.Get(deps.Ctx, user.ID)
 	testutils.AssertNoError(t, err)
