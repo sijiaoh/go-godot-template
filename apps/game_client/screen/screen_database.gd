@@ -1,4 +1,4 @@
 extends Node
 
 
-# const FOO_SCREEN_ENTRY := preload("res://foo_screen_entry.tres") as ScreenEntry
+const TITLE_SCREEN_ENTRY := preload("res://title/title_screen_entry.tres") as ScreenEntry

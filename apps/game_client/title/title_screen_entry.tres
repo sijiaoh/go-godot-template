@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="ScreenEntry" load_steps=2 format=3 uid="uid://bkacqp04p47d2"]
+
+[ext_resource type="Script" uid="uid://k8a4jj5dwky2" path="res://screen/screen_entry.gd" id="1_ooiae"]
+
+[resource]
+script = ExtResource("1_ooiae")
+name = &"Title"
+path = "uid://r4bi1bl61x2y"
+metadata/_custom_type_script = "uid://k8a4jj5dwky2"

@@ -1,0 +1,32 @@
+[gd_scene load_steps=3 format=3 uid="uid://r4bi1bl61x2y"]
+
+[ext_resource type="Script" uid="uid://474q8fgww3vu" path="res://screen/screen.gd" id="1_wvfy4"]
+[ext_resource type="Resource" uid="uid://bkacqp04p47d2" path="res://title/title_screen_entry.tres" id="2_7cv12"]
+
+[node name="TitleScreen" type="Node2D"]
+script = ExtResource("1_wvfy4")
+screen_entry = ExtResource("2_7cv12")
+metadata/_custom_type_script = "uid://474q8fgww3vu"
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Control" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/Control/CenterContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 64
+text = "Go Godot Template"
