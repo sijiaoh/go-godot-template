@@ -1,7 +1,7 @@
 extends Screen
 
 
-var user_name_input: LineEdit
+@export var user_name_input: LineEdit
 
 
 func signup():
