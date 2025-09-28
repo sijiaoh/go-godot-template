@@ -17,6 +17,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
+GameServer="*res://http_helper/game_server.gd"
 ScreenEvents="*res://screen/screen_events.gd"
 ScreenDatabase="*res://screen/screen_database.gd"
 

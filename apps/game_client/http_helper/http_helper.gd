@@ -1,17 +1,23 @@
-extends Node
+class_name HTTPHelper extends Node
 
 
-func request_get(url: String) -> HTTPResponse:
-	return await _request(HTTPClient.METHOD_GET, url)
+var base_url: String
 
-func request_post(url: String, request_body: Dictionary = {}) -> HTTPResponse:
-	return await _request(HTTPClient.METHOD_POST, url, request_body)
 
-func request_put(url: String, request_body: Dictionary = {}) -> HTTPResponse:
-	return await _request(HTTPClient.METHOD_PUT, url, request_body)
+func build_url(path: String) -> String:
+	return "%s/%s" % [base_url.trim_suffix("/"), path.trim_prefix("/")]
 
-func request_delete(url: String) -> HTTPResponse:
-	return await _request(HTTPClient.METHOD_DELETE, url)
+func request_get(path: String) -> HTTPResponse:
+	return await _request(HTTPClient.METHOD_GET, build_url(path))
+
+func request_post(path: String, request_body: Dictionary = {}) -> HTTPResponse:
+	return await _request(HTTPClient.METHOD_POST, build_url(path), request_body)
+
+func request_put(path: String, request_body: Dictionary = {}) -> HTTPResponse:
+	return await _request(HTTPClient.METHOD_PUT, build_url(path), request_body)
+
+func request_delete(path: String) -> HTTPResponse:
+	return await _request(HTTPClient.METHOD_DELETE, build_url(path))
 
 func _request(method: int, url: String, request_body: Dictionary = {}) -> HTTPResponse:
 	var http_response := HTTPResponse.new()
