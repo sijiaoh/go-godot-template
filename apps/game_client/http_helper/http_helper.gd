@@ -2,6 +2,7 @@ class_name HTTPHelper extends Node
 
 
 var base_url: String
+var base_headers: Dictionary = {}
 
 
 func build_url(path: String) -> String:
@@ -23,12 +24,15 @@ func _request(method: int, url: String, params: HTTPParams, response: HTTPRespon
 	var http_request := HTTPRequest.new()
 	add_child(http_request)
 
-	var header := ["Content-Type: application/json", "Accept: application/json"]
+	var headers := ["Content-Type: application/json", "Accept: application/json"]
+	for key in base_headers.keys():
+		headers.append("%s: %s" % [key, base_headers[key]])
+
 	var request_data := ""
 	if params != null:
 		request_data = JSON.stringify(params.body)
 
-	var err := http_request.request(url, header, method, request_data)
+	var err := http_request.request(url, headers, method, request_data)
 	if err != OK:
 		http_request.queue_free()
 		push_error("HTTP request error: %s" % err)
