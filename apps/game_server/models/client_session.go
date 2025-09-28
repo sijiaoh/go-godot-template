@@ -3,6 +3,7 @@ package models
 import (
 	"github.com/google/uuid"
 	"github.com/sijiaoh/go-godot-template/game_server/ent"
+	"github.com/sijiaoh/go-godot-template/game_server/ent/clientsession"
 	"github.com/sijiaoh/go-godot-template/game_server/utils"
 )
 
@@ -41,6 +42,18 @@ func NewClientSessionFromEnt(ecs *ent.ClientSession, user *User) *ClientSession 
 
 		User: user,
 	}
+}
+
+func FindClientSessionByToken(deps *utils.Deps, token string) (*ClientSession, error) {
+	entCS, err := deps.EntClient.ClientSession.Query().
+		Where(clientsession.TokenEQ(token)).
+		Only(deps.Ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	cs := NewClientSessionFromEnt(entCS, nil)
+	return cs, nil
 }
 
 func (cs *ClientSession) LoadUser(deps *utils.Deps) error {
