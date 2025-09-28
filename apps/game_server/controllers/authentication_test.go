@@ -24,15 +24,7 @@ func TestSignup(t *testing.T) {
 	params := controllers.SignupParams{
 		UserName: "Foo",
 	}
-	data, err := json.Marshal(params)
-	if err != nil {
-		t.Fatal(err)
-	}
-	body := bytes.NewBuffer(data)
-	request := httptest.NewRequest(http.MethodPost, "/signup", body)
-
-	response := httptest.NewRecorder()
-	router.ServeHTTP(response, request)
+	response := testutils.JSONRequest(t, router, nil, http.MethodPost, "/signup", params)
 	testutils.AssertResponseCode(t, response.Code, http.StatusCreated)
 
 	testutils.AssertEqual(t, entClient.User.Query().CountX(ctx), 1)
@@ -41,7 +33,7 @@ func TestSignup(t *testing.T) {
 	testutils.AssertEqual(t, entClient.User.Query().FirstX(ctx).Name, params.UserName)
 
 	var res serializers.ClientSessionSerializer
-	err = json.Unmarshal(response.Body.Bytes(), &res)
+	err := json.Unmarshal(response.Body.Bytes(), &res)
 	testutils.AssertNoError(t, err)
 }
 
