@@ -17,5 +17,5 @@ func (c *Controller) ShowMe(w http.ResponseWriter, r *http.Request) {
 	}
 
 	serializer := serializers.NewUserSerializer(c.currentUser)
-	c.renderJson(w, serializer)
+	c.renderJSON(w, serializer)
 }

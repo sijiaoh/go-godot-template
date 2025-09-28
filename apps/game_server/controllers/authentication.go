@@ -35,5 +35,5 @@ func (c *Controller) Signup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	c.renderJson(w, serializers.NewClientSessionSerializer(cs))
+	c.renderJSON(w, serializers.NewClientSessionSerializer(cs))
 }
