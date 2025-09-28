@@ -44,5 +44,5 @@ func _request(method: int, url: String, params: HTTPParams, response: HTTPRespon
 		return
 
 	response.status_code = result[1]
-	var response_body_json: String = result[3]
+	var response_body_json: String = result[3].get_string_from_utf8()
 	response.body = JSON.parse_string(response_body_json)

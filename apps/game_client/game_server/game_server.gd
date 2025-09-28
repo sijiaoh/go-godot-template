@@ -6,5 +6,5 @@ func _ready() -> void:
 
 func signup(params: SignupAPI.SignupParams) -> SignupAPI.SignupResponse:
 	var response := SignupAPI.SignupResponse.new()
-	request_post("/signup", params, response)
+	await request_post("/signup", params, response)
 	return response

@@ -6,7 +6,7 @@ extends Screen
 
 func signup():
 	var params = SignupAPI.SignupParams.new(user_name_input.text)
-	var res := GameServer.signup(params)
+	var res := await GameServer.signup(params)
 
 	if res.status_code != 201:
 		# TODO: 显示登录失败
