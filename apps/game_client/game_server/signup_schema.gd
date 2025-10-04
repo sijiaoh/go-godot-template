@@ -1,4 +1,4 @@
-class_name SignupAPI
+class_name SignupSchema
 
 
 class SignupParams extends HTTPParams:

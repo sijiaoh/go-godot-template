@@ -11,7 +11,7 @@ func _ready() -> void:
 		GameServer.load_token()
 
 func signup(user_name: String) -> void:
-	var params = SignupAPI.SignupParams.new(user_name)
+	var params = SignupSchema.SignupParams.new(user_name)
 	var res := await GameServer.signup(params)
 
 	if res.status_code != 201:
