@@ -13,7 +13,7 @@ func signup(params: SignupSchema.SignupParams) -> SignupSchema.SignupResponse:
 	await request_post("/signup", params, response)
 	return response
 
-func me() -> UserSchema.UserResponse:
-	var response := UserSchema.UserResponse.new()
+func me() -> UserSchema.MeResponse:
+	var response := UserSchema.MeResponse.new()
 	await request_get("/me", response)
 	return response
