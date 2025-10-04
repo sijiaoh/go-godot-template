@@ -10,8 +10,10 @@ static func instance(ctx: Node) -> PlayerState:
 	return _instance
 
 
-var me: Me
+var _me: Me
 
 
-func _ready() -> void:
-	me = await Me.fetch()
+func fetch_me() -> Me:
+	if _me == null:
+		_me = await Me.fetch()
+	return _me
