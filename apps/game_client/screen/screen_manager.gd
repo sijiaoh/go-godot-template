@@ -22,7 +22,7 @@ func _replace_screen(screen_entry: ScreenEntry) -> void:
 		_append_screen(screen_entry)
 		return
 
-	ScreenEvents.pop_screen.emit()
+	ScreenEvents.call_deferred("emit_signal", "exit_screen")
 	await ScreenEvents.exited_screen
 
 	_append_screen(screen_entry)
@@ -38,9 +38,8 @@ func _append_screen(screen_entry: ScreenEntry) -> void:
 	_screen_queue.append(ScreenQueueItem.new(screen_entry, screen))
 
 
-func _exit_screen(screen_entry: ScreenEntry) -> void:
+func _exit_screen() -> void:
 	assert(_screen_queue.size() > 0, "No screen to exit")
-	assert(_screen_queue[_screen_queue.size() - 1].screen_entry == screen_entry, "The screen to exit is not the top screen")
 	_screen_queue[_screen_queue.size() - 1].screen.exit_screen.emit()
 
 func _on_exited_screen(screen_entry: ScreenEntry) -> void:

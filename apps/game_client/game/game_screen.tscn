@@ -1,0 +1,32 @@
+[gd_scene load_steps=5 format=3 uid="uid://biievcx7tx62i"]
+
+[ext_resource type="Script" uid="uid://crsjdm0vmnf26" path="res://game/game_screen.gd" id="1_p6hro"]
+[ext_resource type="Resource" uid="uid://d2p01iman3a6g" path="res://game/game_screen_entry.tres" id="2_f8ett"]
+[ext_resource type="Script" uid="uid://qbqpwpj4wno3" path="res://player/player_state.gd" id="2_wkah5"]
+[ext_resource type="Script" uid="uid://kmxs02aemhkn" path="res://game/user_name_label.gd" id="4_f8ett"]
+
+[node name="GameScreen" type="Node2D"]
+script = ExtResource("1_p6hro")
+screen_entry = ExtResource("2_f8ett")
+
+[node name="PlayerState" type="Node" parent="."]
+script = ExtResource("2_wkah5")
+metadata/_custom_type_script = "uid://qbqpwpj4wno3"
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Control" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Control"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="UserNameLabel" type="Label" parent="CanvasLayer/Control/VBoxContainer"]
+layout_mode = 2
+text = "用户名"
+script = ExtResource("4_f8ett")

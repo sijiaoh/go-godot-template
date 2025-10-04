@@ -5,4 +5,6 @@ extends Screen
 
 
 func signup():
-	Authentication.signup(user_name_input.text)
+	await Authentication.signup(user_name_input.text)
+	if Authentication.is_logged_in:
+		ScreenEvents.replace_screen.emit(ScreenDatabase.GAME_SCREEN_ENTRY)
