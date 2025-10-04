@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://bke5ijixx6o70"]
+[gd_scene load_steps=4 format=3 uid="uid://bke5ijixx6o70"]
 
 [ext_resource type="Script" uid="uid://73vhel4npnhq" path="res://main.gd" id="1_0xm2m"]
 [ext_resource type="Script" uid="uid://nahrl3i0rysp" path="res://screen/screen_manager.gd" id="1_ig7tw"]
+[ext_resource type="PackedScene" uid="uid://c042oisi2f4kt" path="res://modal/modal.tscn" id="3_h2yge"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_0xm2m")
@@ -14,3 +15,5 @@ _screens_node = NodePath("../../Scenes")
 metadata/_custom_type_script = "uid://nahrl3i0rysp"
 
 [node name="Scenes" type="Node" parent="."]
+
+[node name="Modal" parent="." instance=ExtResource("3_h2yge")]

@@ -35,6 +35,7 @@ func _request(method: int, url: String, params: HTTPParams, response: HTTPRespon
 	var err := http_request.request(url, headers, method, request_data)
 	if err != OK:
 		http_request.queue_free()
+		# TODO: 更好的Message
 		push_error("HTTP request error: %s" % err)
 		response.err = err
 		return
@@ -44,6 +45,7 @@ func _request(method: int, url: String, params: HTTPParams, response: HTTPRespon
 
 	response.err = result[0]
 	if response.err != OK:
+		# TODO: 更好的Message
 		push_error("HTTP request error: %s" % response.err)
 		return
 
