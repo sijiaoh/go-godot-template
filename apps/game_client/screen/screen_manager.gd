@@ -48,4 +48,4 @@ func _on_exited_screen(screen_entry: ScreenEntry) -> void:
 
 	_screen_queue.pop_back()
 	if _screen_queue.size() > 0:
-		_screen_queue[_screen_queue.size() - 1].process_mode = Node.PROCESS_MODE_INHERIT
+		_screen_queue[_screen_queue.size() - 1].screen.process_mode = Node.PROCESS_MODE_INHERIT
