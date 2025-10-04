@@ -1,22 +1,30 @@
+# 用于和游戏服务器通讯的类
+#
+# 重写_request实现通用的通讯失败逻辑
+
 extends HTTPHelper
 
 
 func _ready() -> void:
 	base_url = "http://localhost:3000"
 
+
 func load_token() -> void:
 	var token := TokenStore.get_token()
 	base_headers["Authorization"] = "Bearer %s" % token
+
 
 func signup(params: SignupSchema.SignupParams) -> SignupSchema.SignupResponse:
 	var response := SignupSchema.SignupResponse.new()
 	await request_post("/signup", params, response)
 	return response
 
+
 func me() -> UserSchema.MeResponse:
 	var response := UserSchema.MeResponse.new()
 	await request_get("/me", response)
 	return response
+
 
 func _request(method: int, url: String, params: HTTPParams, response: HTTPResponse) -> void:
 	await super._request(method, url, params, response)
