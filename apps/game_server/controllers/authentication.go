@@ -23,7 +23,7 @@ func (c *Controller) Signup(w http.ResponseWriter, r *http.Request) {
 	user := models.NewUser(params.UserName)
 	err = user.Save(deps)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		utils.RenderJSONError(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
@@ -31,7 +31,7 @@ func (c *Controller) Signup(w http.ResponseWriter, r *http.Request) {
 
 	cs, err := models.CreateClientSession(deps, user)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		utils.RenderJSONError(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 

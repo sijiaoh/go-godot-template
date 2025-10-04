@@ -2,13 +2,13 @@ package serializers
 
 import "github.com/sijiaoh/go-godot-template/game_server/models"
 
-type UserSerializer struct {
+type MeSerializer struct {
 	ID   int    `json:"id"`
 	Name string `json:"name"`
 }
 
-func NewUserSerializer(user *models.User) *UserSerializer {
-	return &UserSerializer{
+func NewMeSerializer(user *models.User) *MeSerializer {
+	return &MeSerializer{
 		ID:   user.ID,
 		Name: user.Name,
 	}
