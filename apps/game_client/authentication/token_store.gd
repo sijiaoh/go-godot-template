@@ -14,3 +14,8 @@ static func get_token() -> String:
 	var token := file.get_as_text().strip_edges()
 	file.close()
 	return token
+
+static func clear_token() -> void:
+	var file := FileAccess.open("user://token.txt", FileAccess.WRITE)
+	file.store_string("")
+	file.close()

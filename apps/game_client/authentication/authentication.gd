@@ -9,6 +9,8 @@ func _ready() -> void:
 	is_logged_in = token != ""
 	if is_logged_in:
 		GameServer.load_token()
+	AuthenticationEvents.unauthorized.connect(logout)
+
 
 func signup(user_name: String) -> void:
 	var params = SignupSchema.SignupParams.new(user_name)
@@ -21,3 +23,8 @@ func signup(user_name: String) -> void:
 	TokenStore.set_token(res.token())
 	GameServer.load_token()
 	is_logged_in = true
+
+
+func logout() -> void:
+	TokenStore.clear_token()
+	is_logged_in = false

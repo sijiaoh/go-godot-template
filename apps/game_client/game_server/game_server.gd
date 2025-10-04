@@ -17,3 +17,8 @@ func me() -> UserSchema.MeResponse:
 	var response := UserSchema.MeResponse.new()
 	await request_get("/me", response)
 	return response
+
+func _request(method: int, url: String, params: HTTPParams, response: HTTPResponse) -> void:
+	await super._request(method, url, params, response)
+	if response.err == OK and response.status_code == 401:
+		AuthenticationEvents.unauthorized.emit()
