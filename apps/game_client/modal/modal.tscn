@@ -68,6 +68,6 @@ alignment = 2
 
 [node name="ConfirmButton" type="Button" parent="CanvasLayer/Control/CenterContainer/Panel/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-text = "确定"
+text = "确认"
 
 [connection signal="pressed" from="CanvasLayer/Control/CenterContainer/Panel/MarginContainer/VBoxContainer/HBoxContainer/ConfirmButton" to="." method="_on_confirm_button_pressed"]

@@ -1,0 +1,45 @@
+# LANGUAGE translation for go-godot-template for the following files:
+# res:///main.tscn
+# res:///title/title_screen.tscn
+# res:///modal/modal.tscn
+#
+# Automatically generated, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: go-godot-template\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: /main.tscn /modal/modal.tscn
+msgid "这是一个悬浮窗"
+msgstr "これはモーダルです"
+
+#: /main.tscn /modal/modal.tscn
+msgid "确认"
+msgstr "確認"
+
+#: /title/title_screen.tscn
+msgid "Go Godot Template"
+msgstr "Go Godot Template"
+
+#: /title/title_screen.tscn
+msgid "开始新游戏"
+msgstr "新しいゲーム"
+
+#: /title/title_screen.tscn
+msgid "X"
+msgstr "X"
+
+#: /title/title_screen.tscn
+msgid "角色名"
+msgstr "キャラクター名"
+
+#: /title/title_screen.tscn
+msgid "登录"
+msgstr "登録"

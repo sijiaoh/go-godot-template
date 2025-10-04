@@ -29,6 +29,15 @@ window/size/viewport_width=1280
 window/size/viewport_height=720
 window/stretch/mode="canvas_items"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/i18n_tools/plugin.cfg")
+
+[internationalization]
+
+locale/translations=PackedStringArray("res://locale/ja.po")
+locale/translations_pot_files=[]
+
 [rendering]
 
 renderer/rendering_method="gl_compatibility"
