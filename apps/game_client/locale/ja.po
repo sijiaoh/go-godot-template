@@ -36,9 +36,9 @@ msgstr "新しいゲーム"
 msgid "X"
 msgstr "X"
 
-#: /title/title_screen.tscn
-msgid "角色名"
-msgstr "キャラクター名"
+#: /title/title_screen.tscn /game/game_screen.tscn
+msgid "用户名"
+msgstr "ユーザー名"
 
 #: /title/title_screen.tscn
 msgid "登录"

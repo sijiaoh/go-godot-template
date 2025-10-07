@@ -104,7 +104,7 @@ size_flags_vertical = 3
 [node name="UserNameLineEdit" type="LineEdit" parent="CanvasLayer/Control/SignupContainer/Panel/MarginContainer/VBoxContainer/CenterContainer"]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
-placeholder_text = "角色名"
+placeholder_text = "用户名"
 
 [node name="CenterContainer2" type="CenterContainer" parent="CanvasLayer/Control/SignupContainer/Panel/MarginContainer/VBoxContainer"]
 layout_mode = 2

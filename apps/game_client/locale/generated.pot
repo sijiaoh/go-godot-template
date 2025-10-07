@@ -1,6 +1,7 @@
 # LANGUAGE translation for go-godot-template for the following files:
 # res:///main.tscn
 # res:///title/title_screen.tscn
+# res:///game/game_screen.tscn
 # res:///modal/modal.tscn
 #
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
@@ -36,7 +37,8 @@ msgid "X"
 msgstr ""
 
 #: /title/title_screen.tscn
-msgid "角色名"
+#: /game/game_screen.tscn
+msgid "用户名"
 msgstr ""
 
 #: /title/title_screen.tscn
