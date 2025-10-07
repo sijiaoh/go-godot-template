@@ -17,7 +17,7 @@ func signup(user_name: String) -> void:
 	var res := await GameServer.signup(params)
 
 	if res.status_code != 201:
-		ModalEvents.open_modal.emit("登录失败: err=%s status_code=%s" % [res.err, res.status_code])
+		ModalEvents.open_modal.emit(tr("登录失败") + ": err=%s status_code=%s" % [res.err, res.status_code])
 		return
 
 	TokenStore.set_token(res.token())

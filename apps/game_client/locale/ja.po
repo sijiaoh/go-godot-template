@@ -16,6 +16,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+#: main.gd
+msgid "认证失败，请重新登录。"
+msgstr "認証に失敗しました。もう一度ログインしてください。"
+
+#: authentication/authentication.gd
+msgid "登录失败"
+msgstr "登録失敗"
+
 #: main.tscn modal/modal.tscn
 msgid "这是一个悬浮窗"
 msgstr "これはモーダルです"

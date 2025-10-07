@@ -1,7 +1,12 @@
 const languages = ["ja"]
 
+const IGNORE_DIRS = [
+	"res://addons/",
+]
+
 const EXTRA_SCAN_RULES = [
 	# {"dir": "res://foo", "suffix": "_data.tres"},
+	{"dir": "res://", "suffix": ".gd"},
 	{"dir": "res://", "suffix": ".tscn"},
 ]
 

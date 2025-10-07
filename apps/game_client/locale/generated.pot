@@ -1,4 +1,27 @@
 # LANGUAGE translation for go-godot-template for the following files:
+# res://http_helper/http_helper.gd
+# res://http_helper/http_params.gd
+# res://http_helper/http_response.gd
+# res://title/title_screen.gd
+# res://game_server/me_schema.gd
+# res://game_server/signup_schema.gd
+# res://game_server/game_server.gd
+# res://game/game_screen.gd
+# res://game/user_name_label.gd
+# res://main.gd
+# res://screen/screen_manager.gd
+# res://screen/screen_queue_item.gd
+# res://screen/screen.gd
+# res://screen/screen_entry.gd
+# res://screen/screen_database.gd
+# res://screen/screen_events.gd
+# res://modal/modal.gd
+# res://modal/modal_events.gd
+# res://authentication/authentication.gd
+# res://authentication/authentication_events.gd
+# res://authentication/token_store.gd
+# res://player/me.gd
+# res://player/player_state.gd
 # res://main.tscn
 # res://title/title_screen.tscn
 # res://game/game_screen.tscn
@@ -13,6 +36,14 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8-bit\n"
+
+#: main.gd
+msgid "认证失败，请重新登录。"
+msgstr ""
+
+#: authentication/authentication.gd
+msgid "登录失败"
+msgstr ""
 
 #: main.tscn
 #: modal/modal.tscn

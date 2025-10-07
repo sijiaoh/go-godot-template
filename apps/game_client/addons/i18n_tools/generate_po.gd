@@ -85,14 +85,18 @@ func _scan_directory(dir_path: String, suffix: String) -> Array[String]:
 
 
 func _scan_directory_recursive(dir: DirAccess, current_path: String, suffix: String, result: Array[String]) -> void:
+	var full_dir_path := current_path
+	if not full_dir_path.ends_with("/"):
+		full_dir_path += "/"
+	for ignore_dir in Config.IGNORE_DIRS:
+		if full_dir_path.begins_with(ignore_dir):
+			return
+
 	dir.list_dir_begin()
 
 	var file_name := dir.get_next()
 	while file_name != "":
-		var full_path := current_path
-		if not full_path.ends_with("/"):
-			full_path += "/"
-		full_path += file_name
+		var full_path := full_dir_path + file_name
 
 		if dir.current_is_dir() and not file_name.begins_with("."):
 			var sub_dir = DirAccess.open(full_path)
