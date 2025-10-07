@@ -16,30 +16,30 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: /main.tscn /modal/modal.tscn
+#: main.tscn modal/modal.tscn
 msgid "这是一个悬浮窗"
 msgstr "これはモーダルです"
 
-#: /main.tscn /modal/modal.tscn
+#: main.tscn modal/modal.tscn
 msgid "确认"
 msgstr "確認"
 
-#: /title/title_screen.tscn
+#: title/title_screen.tscn
 msgid "Go Godot Template"
 msgstr "Go Godot Template"
 
-#: /title/title_screen.tscn
+#: title/title_screen.tscn
 msgid "开始新游戏"
 msgstr "新しいゲーム"
 
-#: /title/title_screen.tscn
+#: title/title_screen.tscn
 msgid "X"
 msgstr "X"
 
-#: /title/title_screen.tscn /game/game_screen.tscn
+#: title/title_screen.tscn game/game_screen.tscn
 msgid "用户名"
 msgstr "ユーザー名"
 
-#: /title/title_screen.tscn
+#: title/title_screen.tscn
 msgid "登录"
 msgstr "登録"

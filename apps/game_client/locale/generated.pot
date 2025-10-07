@@ -1,8 +1,8 @@
 # LANGUAGE translation for go-godot-template for the following files:
-# res:///main.tscn
-# res:///title/title_screen.tscn
-# res:///game/game_screen.tscn
-# res:///modal/modal.tscn
+# res://main.tscn
+# res://title/title_screen.tscn
+# res://game/game_screen.tscn
+# res://modal/modal.tscn
 #
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
@@ -14,33 +14,33 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8-bit\n"
 
-#: /main.tscn
-#: /modal/modal.tscn
+#: main.tscn
+#: modal/modal.tscn
 msgid "这是一个悬浮窗"
 msgstr ""
 
-#: /main.tscn
-#: /modal/modal.tscn
+#: main.tscn
+#: modal/modal.tscn
 msgid "确认"
 msgstr ""
 
-#: /title/title_screen.tscn
+#: title/title_screen.tscn
 msgid "Go Godot Template"
 msgstr ""
 
-#: /title/title_screen.tscn
+#: title/title_screen.tscn
 msgid "开始新游戏"
 msgstr ""
 
-#: /title/title_screen.tscn
+#: title/title_screen.tscn
 msgid "X"
 msgstr ""
 
-#: /title/title_screen.tscn
-#: /game/game_screen.tscn
+#: title/title_screen.tscn
+#: game/game_screen.tscn
 msgid "用户名"
 msgstr ""
 
-#: /title/title_screen.tscn
+#: title/title_screen.tscn
 msgid "登录"
 msgstr ""
