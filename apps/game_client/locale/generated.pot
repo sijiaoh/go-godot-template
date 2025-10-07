@@ -37,12 +37,20 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8-bit\n"
 
-#: main.gd
-msgid "认证失败，请重新登录。"
+#: game_server/game_server.gd
+msgid "网络请求失败"
+msgstr ""
+
+#: game_server/game_server.gd
+msgid "请检查网络连接或稍后重试。"
 msgstr ""
 
 #: authentication/authentication.gd
 msgid "登录失败"
+msgstr ""
+
+#: authentication/authentication.gd
+msgid "认证失败，请重新登录。"
 msgstr ""
 
 #: main.tscn

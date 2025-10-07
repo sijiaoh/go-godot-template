@@ -30,3 +30,9 @@ func _request(method: int, url: String, params: HTTPParams, response: HTTPRespon
 	await super._request(method, url, params, response)
 	if response.err == OK and response.status_code == 401:
 		AuthenticationEvents.unauthorized.emit()
+	if response.err != OK:
+		ModalEvents.open_modal.emit(
+			tr("网络请求失败") + ": err=%s status_code=%s" % [response.err, response.status_code] + "\n" +
+			tr("请检查网络连接或稍后重试。")
+		)
+		ScreenEvents.force_replace_root_screen.emit(ScreenDatabase.TITLE_SCREEN_ENTRY)

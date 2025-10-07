@@ -61,6 +61,7 @@ layout_mode = 2
 layout_mode = 2
 size_flags_vertical = 3
 text = "这是一个悬浮窗"
+autowrap_mode = 3
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Control/CenterContainer/Panel/MarginContainer/VBoxContainer"]
 layout_mode = 2
