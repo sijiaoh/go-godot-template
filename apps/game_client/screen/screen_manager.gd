@@ -11,10 +11,19 @@ var _screen_queue: Array[ScreenQueueItem] = []
 func _ready() -> void:
 	assert(_screens_node != null)
 
+	ScreenEvents.force_replace_root_screen.connect(_force_replace_root_screen)
 	ScreenEvents.replace_screen.connect(_replace_screen)
 	ScreenEvents.append_screen.connect(_append_screen)
 	ScreenEvents.exit_screen.connect(_exit_screen)
 	ScreenEvents.exited_screen.connect(_on_exited_screen)
+
+
+# 立即切换到新的场景，用于发生异常等时紧急退避
+func _force_replace_root_screen(screen_entry: ScreenEntry) -> void:
+	for screen_item in _screen_queue:
+		screen_item.screen.queue_free()
+	_screen_queue.clear()
+	_append_screen(screen_entry)
 
 
 func _replace_screen(screen_entry: ScreenEntry) -> void:
