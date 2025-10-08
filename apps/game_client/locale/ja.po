@@ -45,8 +45,8 @@ msgid "Go Godot Template"
 msgstr "Go Godot Template"
 
 #: title/title_screen.tscn
-msgid "开始新游戏"
-msgstr "新しいゲーム"
+msgid "开始游戏"
+msgstr "ゲーム開始"
 
 #: title/title_screen.tscn
 msgid "X"
