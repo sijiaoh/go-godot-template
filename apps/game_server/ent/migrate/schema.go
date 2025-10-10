@@ -28,6 +28,26 @@ var (
 			},
 		},
 	}
+	// TransferCodesColumns holds the columns for the "transfer_codes" table.
+	TransferCodesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "code", Type: field.TypeString, Unique: true},
+		{Name: "user_transfer_code", Type: field.TypeInt, Unique: true},
+	}
+	// TransferCodesTable holds the schema information for the "transfer_codes" table.
+	TransferCodesTable = &schema.Table{
+		Name:       "transfer_codes",
+		Columns:    TransferCodesColumns,
+		PrimaryKey: []*schema.Column{TransferCodesColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "transfer_codes_users_transfer_code",
+				Columns:    []*schema.Column{TransferCodesColumns[2]},
+				RefColumns: []*schema.Column{UsersColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+		},
+	}
 	// UsersColumns holds the columns for the "users" table.
 	UsersColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -42,10 +62,12 @@ var (
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		ClientSessionsTable,
+		TransferCodesTable,
 		UsersTable,
 	}
 )
 
 func init() {
 	ClientSessionsTable.ForeignKeys[0].RefTable = UsersTable
+	TransferCodesTable.ForeignKeys[0].RefTable = UsersTable
 }

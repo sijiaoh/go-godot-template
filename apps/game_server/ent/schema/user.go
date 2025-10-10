@@ -22,5 +22,6 @@ func (User) Fields() []ent.Field {
 func (User) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("client_sessions", ClientSession.Type),
+		edge.To("transfer_code", TransferCode.Type).Unique(),
 	}
 }

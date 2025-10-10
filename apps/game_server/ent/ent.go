@@ -13,6 +13,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/sijiaoh/go-godot-template/game_server/ent/clientsession"
+	"github.com/sijiaoh/go-godot-template/game_server/ent/transfercode"
 	"github.com/sijiaoh/go-godot-template/game_server/ent/user"
 )
 
@@ -75,6 +76,7 @@ func checkColumn(t, c string) error {
 	initCheck.Do(func() {
 		columnCheck = sql.NewColumnCheck(map[string]func(string) bool{
 			clientsession.Table: clientsession.ValidColumn,
+			transfercode.Table:  transfercode.ValidColumn,
 			user.Table:          user.ValidColumn,
 		})
 	})

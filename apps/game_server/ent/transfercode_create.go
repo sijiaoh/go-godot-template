@@ -10,71 +10,47 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/sijiaoh/go-godot-template/game_server/ent/clientsession"
 	"github.com/sijiaoh/go-godot-template/game_server/ent/transfercode"
 	"github.com/sijiaoh/go-godot-template/game_server/ent/user"
 )
 
-// UserCreate is the builder for creating a User entity.
-type UserCreate struct {
+// TransferCodeCreate is the builder for creating a TransferCode entity.
+type TransferCodeCreate struct {
 	config
-	mutation *UserMutation
+	mutation *TransferCodeMutation
 	hooks    []Hook
 	conflict []sql.ConflictOption
 }
 
-// SetName sets the "name" field.
-func (_c *UserCreate) SetName(v string) *UserCreate {
-	_c.mutation.SetName(v)
+// SetCode sets the "code" field.
+func (_c *TransferCodeCreate) SetCode(v string) *TransferCodeCreate {
+	_c.mutation.SetCode(v)
 	return _c
 }
 
-// AddClientSessionIDs adds the "client_sessions" edge to the ClientSession entity by IDs.
-func (_c *UserCreate) AddClientSessionIDs(ids ...int) *UserCreate {
-	_c.mutation.AddClientSessionIDs(ids...)
+// SetUserID sets the "user" edge to the User entity by ID.
+func (_c *TransferCodeCreate) SetUserID(id int) *TransferCodeCreate {
+	_c.mutation.SetUserID(id)
 	return _c
 }
 
-// AddClientSessions adds the "client_sessions" edges to the ClientSession entity.
-func (_c *UserCreate) AddClientSessions(v ...*ClientSession) *UserCreate {
-	ids := make([]int, len(v))
-	for i := range v {
-		ids[i] = v[i].ID
-	}
-	return _c.AddClientSessionIDs(ids...)
+// SetUser sets the "user" edge to the User entity.
+func (_c *TransferCodeCreate) SetUser(v *User) *TransferCodeCreate {
+	return _c.SetUserID(v.ID)
 }
 
-// SetTransferCodeID sets the "transfer_code" edge to the TransferCode entity by ID.
-func (_c *UserCreate) SetTransferCodeID(id int) *UserCreate {
-	_c.mutation.SetTransferCodeID(id)
-	return _c
-}
-
-// SetNillableTransferCodeID sets the "transfer_code" edge to the TransferCode entity by ID if the given value is not nil.
-func (_c *UserCreate) SetNillableTransferCodeID(id *int) *UserCreate {
-	if id != nil {
-		_c = _c.SetTransferCodeID(*id)
-	}
-	return _c
-}
-
-// SetTransferCode sets the "transfer_code" edge to the TransferCode entity.
-func (_c *UserCreate) SetTransferCode(v *TransferCode) *UserCreate {
-	return _c.SetTransferCodeID(v.ID)
-}
-
-// Mutation returns the UserMutation object of the builder.
-func (_c *UserCreate) Mutation() *UserMutation {
+// Mutation returns the TransferCodeMutation object of the builder.
+func (_c *TransferCodeCreate) Mutation() *TransferCodeMutation {
 	return _c.mutation
 }
 
-// Save creates the User in the database.
-func (_c *UserCreate) Save(ctx context.Context) (*User, error) {
+// Save creates the TransferCode in the database.
+func (_c *TransferCodeCreate) Save(ctx context.Context) (*TransferCode, error) {
 	return withHooks(ctx, _c.sqlSave, _c.mutation, _c.hooks)
 }
 
 // SaveX calls Save and panics if Save returns an error.
-func (_c *UserCreate) SaveX(ctx context.Context) *User {
+func (_c *TransferCodeCreate) SaveX(ctx context.Context) *TransferCode {
 	v, err := _c.Save(ctx)
 	if err != nil {
 		panic(err)
@@ -83,27 +59,30 @@ func (_c *UserCreate) SaveX(ctx context.Context) *User {
 }
 
 // Exec executes the query.
-func (_c *UserCreate) Exec(ctx context.Context) error {
+func (_c *TransferCodeCreate) Exec(ctx context.Context) error {
 	_, err := _c.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (_c *UserCreate) ExecX(ctx context.Context) {
+func (_c *TransferCodeCreate) ExecX(ctx context.Context) {
 	if err := _c.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (_c *UserCreate) check() error {
-	if _, ok := _c.mutation.Name(); !ok {
-		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "User.name"`)}
+func (_c *TransferCodeCreate) check() error {
+	if _, ok := _c.mutation.Code(); !ok {
+		return &ValidationError{Name: "code", err: errors.New(`ent: missing required field "TransferCode.code"`)}
+	}
+	if len(_c.mutation.UserIDs()) == 0 {
+		return &ValidationError{Name: "user", err: errors.New(`ent: missing required edge "TransferCode.user"`)}
 	}
 	return nil
 }
 
-func (_c *UserCreate) sqlSave(ctx context.Context) (*User, error) {
+func (_c *TransferCodeCreate) sqlSave(ctx context.Context) (*TransferCode, error) {
 	if err := _c.check(); err != nil {
 		return nil, err
 	}
@@ -121,46 +100,31 @@ func (_c *UserCreate) sqlSave(ctx context.Context) (*User, error) {
 	return _node, nil
 }
 
-func (_c *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
+func (_c *TransferCodeCreate) createSpec() (*TransferCode, *sqlgraph.CreateSpec) {
 	var (
-		_node = &User{config: _c.config}
-		_spec = sqlgraph.NewCreateSpec(user.Table, sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt))
+		_node = &TransferCode{config: _c.config}
+		_spec = sqlgraph.NewCreateSpec(transfercode.Table, sqlgraph.NewFieldSpec(transfercode.FieldID, field.TypeInt))
 	)
 	_spec.OnConflict = _c.conflict
-	if value, ok := _c.mutation.Name(); ok {
-		_spec.SetField(user.FieldName, field.TypeString, value)
-		_node.Name = value
+	if value, ok := _c.mutation.Code(); ok {
+		_spec.SetField(transfercode.FieldCode, field.TypeString, value)
+		_node.Code = value
 	}
-	if nodes := _c.mutation.ClientSessionsIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   user.ClientSessionsTable,
-			Columns: []string{user.ClientSessionsColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(clientsession.FieldID, field.TypeInt),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges = append(_spec.Edges, edge)
-	}
-	if nodes := _c.mutation.TransferCodeIDs(); len(nodes) > 0 {
+	if nodes := _c.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2O,
-			Inverse: false,
-			Table:   user.TransferCodeTable,
-			Columns: []string{user.TransferCodeColumn},
+			Inverse: true,
+			Table:   transfercode.UserTable,
+			Columns: []string{transfercode.UserColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(transfercode.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
+		_node.user_transfer_code = &nodes[0]
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec
@@ -169,8 +133,8 @@ func (_c *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 // OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
 // of the `INSERT` statement. For example:
 //
-//	client.User.Create().
-//		SetName(v).
+//	client.TransferCode.Create().
+//		SetCode(v).
 //		OnConflict(
 //			// Update the row with the new values
 //			// the was proposed for insertion.
@@ -178,13 +142,13 @@ func (_c *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 //		).
 //		// Override some of the fields with custom
 //		// update values.
-//		Update(func(u *ent.UserUpsert) {
-//			SetName(v+v).
+//		Update(func(u *ent.TransferCodeUpsert) {
+//			SetCode(v+v).
 //		}).
 //		Exec(ctx)
-func (_c *UserCreate) OnConflict(opts ...sql.ConflictOption) *UserUpsertOne {
+func (_c *TransferCodeCreate) OnConflict(opts ...sql.ConflictOption) *TransferCodeUpsertOne {
 	_c.conflict = opts
-	return &UserUpsertOne{
+	return &TransferCodeUpsertOne{
 		create: _c,
 	}
 }
@@ -192,50 +156,50 @@ func (_c *UserCreate) OnConflict(opts ...sql.ConflictOption) *UserUpsertOne {
 // OnConflictColumns calls `OnConflict` and configures the columns
 // as conflict target. Using this option is equivalent to using:
 //
-//	client.User.Create().
+//	client.TransferCode.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-func (_c *UserCreate) OnConflictColumns(columns ...string) *UserUpsertOne {
+func (_c *TransferCodeCreate) OnConflictColumns(columns ...string) *TransferCodeUpsertOne {
 	_c.conflict = append(_c.conflict, sql.ConflictColumns(columns...))
-	return &UserUpsertOne{
+	return &TransferCodeUpsertOne{
 		create: _c,
 	}
 }
 
 type (
-	// UserUpsertOne is the builder for "upsert"-ing
-	//  one User node.
-	UserUpsertOne struct {
-		create *UserCreate
+	// TransferCodeUpsertOne is the builder for "upsert"-ing
+	//  one TransferCode node.
+	TransferCodeUpsertOne struct {
+		create *TransferCodeCreate
 	}
 
-	// UserUpsert is the "OnConflict" setter.
-	UserUpsert struct {
+	// TransferCodeUpsert is the "OnConflict" setter.
+	TransferCodeUpsert struct {
 		*sql.UpdateSet
 	}
 )
 
-// SetName sets the "name" field.
-func (u *UserUpsert) SetName(v string) *UserUpsert {
-	u.Set(user.FieldName, v)
+// SetCode sets the "code" field.
+func (u *TransferCodeUpsert) SetCode(v string) *TransferCodeUpsert {
+	u.Set(transfercode.FieldCode, v)
 	return u
 }
 
-// UpdateName sets the "name" field to the value that was provided on create.
-func (u *UserUpsert) UpdateName() *UserUpsert {
-	u.SetExcluded(user.FieldName)
+// UpdateCode sets the "code" field to the value that was provided on create.
+func (u *TransferCodeUpsert) UpdateCode() *TransferCodeUpsert {
+	u.SetExcluded(transfercode.FieldCode)
 	return u
 }
 
 // UpdateNewValues updates the mutable fields using the new values that were set on create.
 // Using this option is equivalent to using:
 //
-//	client.User.Create().
+//	client.TransferCode.Create().
 //		OnConflict(
 //			sql.ResolveWithNewValues(),
 //		).
 //		Exec(ctx)
-func (u *UserUpsertOne) UpdateNewValues() *UserUpsertOne {
+func (u *TransferCodeUpsertOne) UpdateNewValues() *TransferCodeUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	return u
 }
@@ -243,61 +207,61 @@ func (u *UserUpsertOne) UpdateNewValues() *UserUpsertOne {
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//	client.User.Create().
+//	client.TransferCode.Create().
 //	    OnConflict(sql.ResolveWithIgnore()).
 //	    Exec(ctx)
-func (u *UserUpsertOne) Ignore() *UserUpsertOne {
+func (u *TransferCodeUpsertOne) Ignore() *TransferCodeUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
 }
 
 // DoNothing configures the conflict_action to `DO NOTHING`.
 // Supported only by SQLite and PostgreSQL.
-func (u *UserUpsertOne) DoNothing() *UserUpsertOne {
+func (u *TransferCodeUpsertOne) DoNothing() *TransferCodeUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.DoNothing())
 	return u
 }
 
-// Update allows overriding fields `UPDATE` values. See the UserCreate.OnConflict
+// Update allows overriding fields `UPDATE` values. See the TransferCodeCreate.OnConflict
 // documentation for more info.
-func (u *UserUpsertOne) Update(set func(*UserUpsert)) *UserUpsertOne {
+func (u *TransferCodeUpsertOne) Update(set func(*TransferCodeUpsert)) *TransferCodeUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
-		set(&UserUpsert{UpdateSet: update})
+		set(&TransferCodeUpsert{UpdateSet: update})
 	}))
 	return u
 }
 
-// SetName sets the "name" field.
-func (u *UserUpsertOne) SetName(v string) *UserUpsertOne {
-	return u.Update(func(s *UserUpsert) {
-		s.SetName(v)
+// SetCode sets the "code" field.
+func (u *TransferCodeUpsertOne) SetCode(v string) *TransferCodeUpsertOne {
+	return u.Update(func(s *TransferCodeUpsert) {
+		s.SetCode(v)
 	})
 }
 
-// UpdateName sets the "name" field to the value that was provided on create.
-func (u *UserUpsertOne) UpdateName() *UserUpsertOne {
-	return u.Update(func(s *UserUpsert) {
-		s.UpdateName()
+// UpdateCode sets the "code" field to the value that was provided on create.
+func (u *TransferCodeUpsertOne) UpdateCode() *TransferCodeUpsertOne {
+	return u.Update(func(s *TransferCodeUpsert) {
+		s.UpdateCode()
 	})
 }
 
 // Exec executes the query.
-func (u *UserUpsertOne) Exec(ctx context.Context) error {
+func (u *TransferCodeUpsertOne) Exec(ctx context.Context) error {
 	if len(u.create.conflict) == 0 {
-		return errors.New("ent: missing options for UserCreate.OnConflict")
+		return errors.New("ent: missing options for TransferCodeCreate.OnConflict")
 	}
 	return u.create.Exec(ctx)
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (u *UserUpsertOne) ExecX(ctx context.Context) {
+func (u *TransferCodeUpsertOne) ExecX(ctx context.Context) {
 	if err := u.create.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // Exec executes the UPSERT query and returns the inserted/updated ID.
-func (u *UserUpsertOne) ID(ctx context.Context) (id int, err error) {
+func (u *TransferCodeUpsertOne) ID(ctx context.Context) (id int, err error) {
 	node, err := u.create.Save(ctx)
 	if err != nil {
 		return id, err
@@ -306,7 +270,7 @@ func (u *UserUpsertOne) ID(ctx context.Context) (id int, err error) {
 }
 
 // IDX is like ID, but panics if an error occurs.
-func (u *UserUpsertOne) IDX(ctx context.Context) int {
+func (u *TransferCodeUpsertOne) IDX(ctx context.Context) int {
 	id, err := u.ID(ctx)
 	if err != nil {
 		panic(err)
@@ -314,27 +278,27 @@ func (u *UserUpsertOne) IDX(ctx context.Context) int {
 	return id
 }
 
-// UserCreateBulk is the builder for creating many User entities in bulk.
-type UserCreateBulk struct {
+// TransferCodeCreateBulk is the builder for creating many TransferCode entities in bulk.
+type TransferCodeCreateBulk struct {
 	config
 	err      error
-	builders []*UserCreate
+	builders []*TransferCodeCreate
 	conflict []sql.ConflictOption
 }
 
-// Save creates the User entities in the database.
-func (_c *UserCreateBulk) Save(ctx context.Context) ([]*User, error) {
+// Save creates the TransferCode entities in the database.
+func (_c *TransferCodeCreateBulk) Save(ctx context.Context) ([]*TransferCode, error) {
 	if _c.err != nil {
 		return nil, _c.err
 	}
 	specs := make([]*sqlgraph.CreateSpec, len(_c.builders))
-	nodes := make([]*User, len(_c.builders))
+	nodes := make([]*TransferCode, len(_c.builders))
 	mutators := make([]Mutator, len(_c.builders))
 	for i := range _c.builders {
 		func(i int, root context.Context) {
 			builder := _c.builders[i]
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-				mutation, ok := m.(*UserMutation)
+				mutation, ok := m.(*TransferCodeMutation)
 				if !ok {
 					return nil, fmt.Errorf("unexpected mutation type %T", m)
 				}
@@ -382,7 +346,7 @@ func (_c *UserCreateBulk) Save(ctx context.Context) ([]*User, error) {
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (_c *UserCreateBulk) SaveX(ctx context.Context) []*User {
+func (_c *TransferCodeCreateBulk) SaveX(ctx context.Context) []*TransferCode {
 	v, err := _c.Save(ctx)
 	if err != nil {
 		panic(err)
@@ -391,13 +355,13 @@ func (_c *UserCreateBulk) SaveX(ctx context.Context) []*User {
 }
 
 // Exec executes the query.
-func (_c *UserCreateBulk) Exec(ctx context.Context) error {
+func (_c *TransferCodeCreateBulk) Exec(ctx context.Context) error {
 	_, err := _c.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (_c *UserCreateBulk) ExecX(ctx context.Context) {
+func (_c *TransferCodeCreateBulk) ExecX(ctx context.Context) {
 	if err := _c.Exec(ctx); err != nil {
 		panic(err)
 	}
@@ -406,7 +370,7 @@ func (_c *UserCreateBulk) ExecX(ctx context.Context) {
 // OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
 // of the `INSERT` statement. For example:
 //
-//	client.User.CreateBulk(builders...).
+//	client.TransferCode.CreateBulk(builders...).
 //		OnConflict(
 //			// Update the row with the new values
 //			// the was proposed for insertion.
@@ -414,13 +378,13 @@ func (_c *UserCreateBulk) ExecX(ctx context.Context) {
 //		).
 //		// Override some of the fields with custom
 //		// update values.
-//		Update(func(u *ent.UserUpsert) {
-//			SetName(v+v).
+//		Update(func(u *ent.TransferCodeUpsert) {
+//			SetCode(v+v).
 //		}).
 //		Exec(ctx)
-func (_c *UserCreateBulk) OnConflict(opts ...sql.ConflictOption) *UserUpsertBulk {
+func (_c *TransferCodeCreateBulk) OnConflict(opts ...sql.ConflictOption) *TransferCodeUpsertBulk {
 	_c.conflict = opts
-	return &UserUpsertBulk{
+	return &TransferCodeUpsertBulk{
 		create: _c,
 	}
 }
@@ -428,31 +392,31 @@ func (_c *UserCreateBulk) OnConflict(opts ...sql.ConflictOption) *UserUpsertBulk
 // OnConflictColumns calls `OnConflict` and configures the columns
 // as conflict target. Using this option is equivalent to using:
 //
-//	client.User.Create().
+//	client.TransferCode.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-func (_c *UserCreateBulk) OnConflictColumns(columns ...string) *UserUpsertBulk {
+func (_c *TransferCodeCreateBulk) OnConflictColumns(columns ...string) *TransferCodeUpsertBulk {
 	_c.conflict = append(_c.conflict, sql.ConflictColumns(columns...))
-	return &UserUpsertBulk{
+	return &TransferCodeUpsertBulk{
 		create: _c,
 	}
 }
 
-// UserUpsertBulk is the builder for "upsert"-ing
-// a bulk of User nodes.
-type UserUpsertBulk struct {
-	create *UserCreateBulk
+// TransferCodeUpsertBulk is the builder for "upsert"-ing
+// a bulk of TransferCode nodes.
+type TransferCodeUpsertBulk struct {
+	create *TransferCodeCreateBulk
 }
 
 // UpdateNewValues updates the mutable fields using the new values that
 // were set on create. Using this option is equivalent to using:
 //
-//	client.User.Create().
+//	client.TransferCode.Create().
 //		OnConflict(
 //			sql.ResolveWithNewValues(),
 //		).
 //		Exec(ctx)
-func (u *UserUpsertBulk) UpdateNewValues() *UserUpsertBulk {
+func (u *TransferCodeUpsertBulk) UpdateNewValues() *TransferCodeUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	return u
 }
@@ -460,62 +424,62 @@ func (u *UserUpsertBulk) UpdateNewValues() *UserUpsertBulk {
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//	client.User.Create().
+//	client.TransferCode.Create().
 //		OnConflict(sql.ResolveWithIgnore()).
 //		Exec(ctx)
-func (u *UserUpsertBulk) Ignore() *UserUpsertBulk {
+func (u *TransferCodeUpsertBulk) Ignore() *TransferCodeUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
 }
 
 // DoNothing configures the conflict_action to `DO NOTHING`.
 // Supported only by SQLite and PostgreSQL.
-func (u *UserUpsertBulk) DoNothing() *UserUpsertBulk {
+func (u *TransferCodeUpsertBulk) DoNothing() *TransferCodeUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.DoNothing())
 	return u
 }
 
-// Update allows overriding fields `UPDATE` values. See the UserCreateBulk.OnConflict
+// Update allows overriding fields `UPDATE` values. See the TransferCodeCreateBulk.OnConflict
 // documentation for more info.
-func (u *UserUpsertBulk) Update(set func(*UserUpsert)) *UserUpsertBulk {
+func (u *TransferCodeUpsertBulk) Update(set func(*TransferCodeUpsert)) *TransferCodeUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
-		set(&UserUpsert{UpdateSet: update})
+		set(&TransferCodeUpsert{UpdateSet: update})
 	}))
 	return u
 }
 
-// SetName sets the "name" field.
-func (u *UserUpsertBulk) SetName(v string) *UserUpsertBulk {
-	return u.Update(func(s *UserUpsert) {
-		s.SetName(v)
+// SetCode sets the "code" field.
+func (u *TransferCodeUpsertBulk) SetCode(v string) *TransferCodeUpsertBulk {
+	return u.Update(func(s *TransferCodeUpsert) {
+		s.SetCode(v)
 	})
 }
 
-// UpdateName sets the "name" field to the value that was provided on create.
-func (u *UserUpsertBulk) UpdateName() *UserUpsertBulk {
-	return u.Update(func(s *UserUpsert) {
-		s.UpdateName()
+// UpdateCode sets the "code" field to the value that was provided on create.
+func (u *TransferCodeUpsertBulk) UpdateCode() *TransferCodeUpsertBulk {
+	return u.Update(func(s *TransferCodeUpsert) {
+		s.UpdateCode()
 	})
 }
 
 // Exec executes the query.
-func (u *UserUpsertBulk) Exec(ctx context.Context) error {
+func (u *TransferCodeUpsertBulk) Exec(ctx context.Context) error {
 	if u.create.err != nil {
 		return u.create.err
 	}
 	for i, b := range u.create.builders {
 		if len(b.conflict) != 0 {
-			return fmt.Errorf("ent: OnConflict was set for builder %d. Set it on the UserCreateBulk instead", i)
+			return fmt.Errorf("ent: OnConflict was set for builder %d. Set it on the TransferCodeCreateBulk instead", i)
 		}
 	}
 	if len(u.create.conflict) == 0 {
-		return errors.New("ent: missing options for UserCreateBulk.OnConflict")
+		return errors.New("ent: missing options for TransferCodeCreateBulk.OnConflict")
 	}
 	return u.create.Exec(ctx)
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (u *UserUpsertBulk) ExecX(ctx context.Context) {
+func (u *TransferCodeUpsertBulk) ExecX(ctx context.Context) {
 	if err := u.create.Exec(ctx); err != nil {
 		panic(err)
 	}

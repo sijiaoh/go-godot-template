@@ -12,6 +12,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/sijiaoh/go-godot-template/game_server/ent/clientsession"
 	"github.com/sijiaoh/go-godot-template/game_server/ent/predicate"
+	"github.com/sijiaoh/go-godot-template/game_server/ent/transfercode"
 	"github.com/sijiaoh/go-godot-template/game_server/ent/user"
 )
 
@@ -57,6 +58,25 @@ func (_u *UserUpdate) AddClientSessions(v ...*ClientSession) *UserUpdate {
 	return _u.AddClientSessionIDs(ids...)
 }
 
+// SetTransferCodeID sets the "transfer_code" edge to the TransferCode entity by ID.
+func (_u *UserUpdate) SetTransferCodeID(id int) *UserUpdate {
+	_u.mutation.SetTransferCodeID(id)
+	return _u
+}
+
+// SetNillableTransferCodeID sets the "transfer_code" edge to the TransferCode entity by ID if the given value is not nil.
+func (_u *UserUpdate) SetNillableTransferCodeID(id *int) *UserUpdate {
+	if id != nil {
+		_u = _u.SetTransferCodeID(*id)
+	}
+	return _u
+}
+
+// SetTransferCode sets the "transfer_code" edge to the TransferCode entity.
+func (_u *UserUpdate) SetTransferCode(v *TransferCode) *UserUpdate {
+	return _u.SetTransferCodeID(v.ID)
+}
+
 // Mutation returns the UserMutation object of the builder.
 func (_u *UserUpdate) Mutation() *UserMutation {
 	return _u.mutation
@@ -81,6 +101,12 @@ func (_u *UserUpdate) RemoveClientSessions(v ...*ClientSession) *UserUpdate {
 		ids[i] = v[i].ID
 	}
 	return _u.RemoveClientSessionIDs(ids...)
+}
+
+// ClearTransferCode clears the "transfer_code" edge to the TransferCode entity.
+func (_u *UserUpdate) ClearTransferCode() *UserUpdate {
+	_u.mutation.ClearTransferCode()
+	return _u
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -167,6 +193,35 @@ func (_u *UserUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if _u.mutation.TransferCodeCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2O,
+			Inverse: false,
+			Table:   user.TransferCodeTable,
+			Columns: []string{user.TransferCodeColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(transfercode.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.TransferCodeIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2O,
+			Inverse: false,
+			Table:   user.TransferCodeTable,
+			Columns: []string{user.TransferCodeColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(transfercode.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if _node, err = sqlgraph.UpdateNodes(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{user.Label}
@@ -216,6 +271,25 @@ func (_u *UserUpdateOne) AddClientSessions(v ...*ClientSession) *UserUpdateOne {
 	return _u.AddClientSessionIDs(ids...)
 }
 
+// SetTransferCodeID sets the "transfer_code" edge to the TransferCode entity by ID.
+func (_u *UserUpdateOne) SetTransferCodeID(id int) *UserUpdateOne {
+	_u.mutation.SetTransferCodeID(id)
+	return _u
+}
+
+// SetNillableTransferCodeID sets the "transfer_code" edge to the TransferCode entity by ID if the given value is not nil.
+func (_u *UserUpdateOne) SetNillableTransferCodeID(id *int) *UserUpdateOne {
+	if id != nil {
+		_u = _u.SetTransferCodeID(*id)
+	}
+	return _u
+}
+
+// SetTransferCode sets the "transfer_code" edge to the TransferCode entity.
+func (_u *UserUpdateOne) SetTransferCode(v *TransferCode) *UserUpdateOne {
+	return _u.SetTransferCodeID(v.ID)
+}
+
 // Mutation returns the UserMutation object of the builder.
 func (_u *UserUpdateOne) Mutation() *UserMutation {
 	return _u.mutation
@@ -240,6 +314,12 @@ func (_u *UserUpdateOne) RemoveClientSessions(v ...*ClientSession) *UserUpdateOn
 		ids[i] = v[i].ID
 	}
 	return _u.RemoveClientSessionIDs(ids...)
+}
+
+// ClearTransferCode clears the "transfer_code" edge to the TransferCode entity.
+func (_u *UserUpdateOne) ClearTransferCode() *UserUpdateOne {
+	_u.mutation.ClearTransferCode()
+	return _u
 }
 
 // Where appends a list predicates to the UserUpdate builder.
@@ -349,6 +429,35 @@ func (_u *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) {
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(clientsession.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.TransferCodeCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2O,
+			Inverse: false,
+			Table:   user.TransferCodeTable,
+			Columns: []string{user.TransferCodeColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(transfercode.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.TransferCodeIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2O,
+			Inverse: false,
+			Table:   user.TransferCodeTable,
+			Columns: []string{user.TransferCodeColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(transfercode.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {

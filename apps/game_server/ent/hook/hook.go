@@ -21,6 +21,18 @@ func (f ClientSessionFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Valu
 	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.ClientSessionMutation", m)
 }
 
+// The TransferCodeFunc type is an adapter to allow the use of ordinary
+// function as TransferCode mutator.
+type TransferCodeFunc func(context.Context, *ent.TransferCodeMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f TransferCodeFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.TransferCodeMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.TransferCodeMutation", m)
+}
+
 // The UserFunc type is an adapter to allow the use of ordinary
 // function as User mutator.
 type UserFunc func(context.Context, *ent.UserMutation) (ent.Value, error)

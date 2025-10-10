@@ -9,5 +9,8 @@ import (
 // ClientSession is the predicate function for clientsession builders.
 type ClientSession func(*sql.Selector)
 
+// TransferCode is the predicate function for transfercode builders.
+type TransferCode func(*sql.Selector)
+
 // User is the predicate function for user builders.
 type User func(*sql.Selector)

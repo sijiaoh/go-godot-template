@@ -16,6 +16,8 @@ const (
 	FieldName = "name"
 	// EdgeClientSessions holds the string denoting the client_sessions edge name in mutations.
 	EdgeClientSessions = "client_sessions"
+	// EdgeTransferCode holds the string denoting the transfer_code edge name in mutations.
+	EdgeTransferCode = "transfer_code"
 	// Table holds the table name of the user in the database.
 	Table = "users"
 	// ClientSessionsTable is the table that holds the client_sessions relation/edge.
@@ -25,6 +27,13 @@ const (
 	ClientSessionsInverseTable = "client_sessions"
 	// ClientSessionsColumn is the table column denoting the client_sessions relation/edge.
 	ClientSessionsColumn = "user_client_sessions"
+	// TransferCodeTable is the table that holds the transfer_code relation/edge.
+	TransferCodeTable = "transfer_codes"
+	// TransferCodeInverseTable is the table name for the TransferCode entity.
+	// It exists in this package in order to avoid circular dependency with the "transfercode" package.
+	TransferCodeInverseTable = "transfer_codes"
+	// TransferCodeColumn is the table column denoting the transfer_code relation/edge.
+	TransferCodeColumn = "user_transfer_code"
 )
 
 // Columns holds all SQL columns for user fields.
@@ -69,10 +78,24 @@ func ByClientSessions(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 		sqlgraph.OrderByNeighborTerms(s, newClientSessionsStep(), append([]sql.OrderTerm{term}, terms...)...)
 	}
 }
+
+// ByTransferCodeField orders the results by transfer_code field.
+func ByTransferCodeField(field string, opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newTransferCodeStep(), sql.OrderByField(field, opts...))
+	}
+}
 func newClientSessionsStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(ClientSessionsInverseTable, FieldID),
 		sqlgraph.Edge(sqlgraph.O2M, false, ClientSessionsTable, ClientSessionsColumn),
+	)
+}
+func newTransferCodeStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(TransferCodeInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2O, false, TransferCodeTable, TransferCodeColumn),
 	)
 }

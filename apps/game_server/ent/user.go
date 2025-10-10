@@ -8,6 +8,7 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
+	"github.com/sijiaoh/go-godot-template/game_server/ent/transfercode"
 	"github.com/sijiaoh/go-godot-template/game_server/ent/user"
 )
 
@@ -28,9 +29,11 @@ type User struct {
 type UserEdges struct {
 	// ClientSessions holds the value of the client_sessions edge.
 	ClientSessions []*ClientSession `json:"client_sessions,omitempty"`
+	// TransferCode holds the value of the transfer_code edge.
+	TransferCode *TransferCode `json:"transfer_code,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [1]bool
+	loadedTypes [2]bool
 }
 
 // ClientSessionsOrErr returns the ClientSessions value or an error if the edge
@@ -40,6 +43,17 @@ func (e UserEdges) ClientSessionsOrErr() ([]*ClientSession, error) {
 		return e.ClientSessions, nil
 	}
 	return nil, &NotLoadedError{edge: "client_sessions"}
+}
+
+// TransferCodeOrErr returns the TransferCode value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e UserEdges) TransferCodeOrErr() (*TransferCode, error) {
+	if e.TransferCode != nil {
+		return e.TransferCode, nil
+	} else if e.loadedTypes[1] {
+		return nil, &NotFoundError{label: transfercode.Label}
+	}
+	return nil, &NotLoadedError{edge: "transfer_code"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -94,6 +108,11 @@ func (_m *User) Value(name string) (ent.Value, error) {
 // QueryClientSessions queries the "client_sessions" edge of the User entity.
 func (_m *User) QueryClientSessions() *ClientSessionQuery {
 	return NewUserClient(_m.config).QueryClientSessions(_m)
+}
+
+// QueryTransferCode queries the "transfer_code" edge of the User entity.
+func (_m *User) QueryTransferCode() *TransferCodeQuery {
+	return NewUserClient(_m.config).QueryTransferCode(_m)
 }
 
 // Update returns a builder for updating this User.

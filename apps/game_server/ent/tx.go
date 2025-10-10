@@ -14,6 +14,8 @@ type Tx struct {
 	config
 	// ClientSession is the client for interacting with the ClientSession builders.
 	ClientSession *ClientSessionClient
+	// TransferCode is the client for interacting with the TransferCode builders.
+	TransferCode *TransferCodeClient
 	// User is the client for interacting with the User builders.
 	User *UserClient
 
@@ -148,6 +150,7 @@ func (tx *Tx) Client() *Client {
 
 func (tx *Tx) init() {
 	tx.ClientSession = NewClientSessionClient(tx.config)
+	tx.TransferCode = NewTransferCodeClient(tx.config)
 	tx.User = NewUserClient(tx.config)
 }
 

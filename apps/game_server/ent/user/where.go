@@ -146,6 +146,29 @@ func HasClientSessionsWith(preds ...predicate.ClientSession) predicate.User {
 	})
 }
 
+// HasTransferCode applies the HasEdge predicate on the "transfer_code" edge.
+func HasTransferCode() predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.O2O, false, TransferCodeTable, TransferCodeColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasTransferCodeWith applies the HasEdge predicate on the "transfer_code" edge with a given conditions (other predicates).
+func HasTransferCodeWith(preds ...predicate.TransferCode) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		step := newTransferCodeStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
 // And groups predicates with the AND operator between them.
 func And(predicates ...predicate.User) predicate.User {
 	return predicate.User(sql.AndPredicates(predicates...))
