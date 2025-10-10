@@ -38,6 +38,7 @@ func NewClientSessionFromEnt(ecs *ent.ClientSession, user *User) *ClientSession 
 	return &ClientSession{
 		EntClientSession: ecs,
 
+		ID:    ecs.ID,
 		Token: ecs.Token,
 
 		User: user,
