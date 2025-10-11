@@ -7,6 +7,8 @@ import (
 
 func ExampleDeps_WithEntTx() {
 	testDeps := testutils.NewTestDeps()
+	defer testDeps.Close()
+
 	deps := testDeps.Deps
 
 	err := deps.WithEntTx(func(txDeps *utils.Deps) error {
@@ -29,6 +31,8 @@ func ExampleDeps_WithEntTx() {
 
 func ExampleDeps_WithEntTx_nest() {
 	testDeps := testutils.NewTestDeps()
+	defer testDeps.Close()
+
 	deps := testDeps.Deps
 
 	err := deps.WithEntTx(func(txDeps *utils.Deps) error {

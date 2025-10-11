@@ -10,6 +10,8 @@ import (
 
 func ExampleSave() {
 	deps := testutils.NewTestDeps()
+	defer deps.Close()
+
 	user := models.NewUser("Foo")
 
 	err := validators.Validate().Struct(user)
