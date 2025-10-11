@@ -7,13 +7,13 @@ import (
 	"github.com/sijiaoh/go-godot-template/game_server/testutils"
 )
 
-func TestShowMe(t *testing.T) {
+func TestShowTransferCode(t *testing.T) {
 	testServer := testutils.NewTestServer()
 	defer testServer.Close()
 
 	router := testServer.Router
 	token := testutils.Signup(t, router, "Foo")
 
-	response := testutils.JSONRequest(t, router, &token, http.MethodGet, "/me", nil)
+	response := testutils.JSONRequest(t, router, &token, http.MethodGet, "/transfer-code", nil)
 	testutils.AssertResponseCode(t, response.Code, http.StatusOK)
 }
