@@ -5,7 +5,7 @@ var name: String
 
 
 static func fetch() -> Me:
-	var res := await GameServer.me()
+	var res := await GameServer.get_me()
 	if res.status_code != 200:
 		return null
 

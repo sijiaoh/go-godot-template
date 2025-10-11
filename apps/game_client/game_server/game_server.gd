@@ -20,7 +20,7 @@ func signup(params: SignupSchema.SignupParams) -> SignupSchema.SignupResponse:
 	return response
 
 
-func me() -> UserSchema.MeResponse:
+func get_me() -> UserSchema.MeResponse:
 	var response := UserSchema.MeResponse.new()
 	await request_get("/me", response)
 	return response
