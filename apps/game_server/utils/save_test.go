@@ -23,7 +23,7 @@ func ExampleSave() {
 		&deps.Deps,
 		user.EntUser,
 		func() *ent.UserCreate { return deps.EntClient.User.Create() },
-		func() *ent.UserUpdateOne { return user.EntUser.Update() },
+		func() *ent.UserUpdateOne { return deps.EntClient.User.UpdateOneID(user.ID) },
 		func(mutation *ent.UserMutation) {
 			if user.EntUser == nil || user.Name != user.EntUser.Name {
 				mutation.SetName(user.Name)
