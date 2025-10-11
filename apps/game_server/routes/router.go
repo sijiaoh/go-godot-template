@@ -23,7 +23,9 @@ func NewRouter(entClient *ent.Client) *chi.Mux {
 	router.Post("/signup", controller.Signup)
 
 	router.Get("/me", controller.ShowMe)
+
 	router.Get("/transfer-code", controller.ShowTransferCode)
+	router.Post("/transfer-code/rotate", controller.RotateTransferCode)
 
 	return router
 }
