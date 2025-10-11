@@ -67,7 +67,7 @@ func (tc *TransferCode) LoadUser(deps *utils.Deps) error {
 	return nil
 }
 
-func (tc *TransferCode) RegenerateCode(deps *utils.Deps) error {
+func (tc *TransferCode) Rotate(deps *utils.Deps) error {
 	code, err := GenerateTransferCode()
 	if err != nil {
 		return err

@@ -7,7 +7,7 @@ import (
 	"github.com/sijiaoh/go-godot-template/game_server/testutils"
 )
 
-func TestTransferCode_RegenerateCode(t *testing.T) {
+func TestTransferCode_Rotate(t *testing.T) {
 	deps := testutils.NewTestDeps()
 	defer deps.Close()
 
@@ -15,7 +15,7 @@ func TestTransferCode_RegenerateCode(t *testing.T) {
 	tc := CreateTransferCode(t, deps, user)
 	oldCode := tc.Code
 
-	err := tc.RegenerateCode(&deps.Deps)
+	err := tc.Rotate(&deps.Deps)
 	testutils.AssertNoError(t, err)
 
 	testutils.AssertEqual(t, deps.EntClient.TransferCode.Query().CountX(deps.Ctx), 1)
