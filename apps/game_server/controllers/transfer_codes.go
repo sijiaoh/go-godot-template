@@ -19,6 +19,7 @@ func (c *Controller) ShowTransferCode(w http.ResponseWriter, r *http.Request) {
 	err := c.currentUser.LoadTransferCode(deps)
 	if err != nil {
 		utils.RenderJSONError(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 
 	serializer := serializers.NewTransferCodeSerializer(c.currentUser.TransferCode)
@@ -37,6 +38,7 @@ func (c *Controller) RotateTransferCode(w http.ResponseWriter, r *http.Request) 
 	err := c.currentUser.LoadTransferCode(deps)
 	if err != nil {
 		utils.RenderJSONError(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 
 	err = c.currentUser.TransferCode.Rotate(deps)
