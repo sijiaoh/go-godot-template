@@ -18,6 +18,12 @@ func AssertEqual[T comparable](t *testing.T, got, expected T) {
 	}
 }
 
+func AssertNotEqual[T comparable](t *testing.T, got, expected T) {
+	if got == expected {
+		t.Fatalf("expected not %v, got %v", expected, got)
+	}
+}
+
 func AssertStrPtrEqual(t *testing.T, got, expected *string) {
 	if !utils.StrPtrEq(got, expected) {
 		t.Fatalf("expected %v, got %v", expected, got)
