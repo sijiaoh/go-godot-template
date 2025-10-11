@@ -17,3 +17,19 @@ func NewDeps(entClient *ent.Client, ctx context.Context) *Deps {
 		Ctx:       ctx,
 	}
 }
+
+func (d *Deps) WithEntTx(fn func(txDeps *Deps) error) error {
+	tx, err := d.EntClient.Tx(d.Ctx)
+	if err != nil {
+		return err
+	}
+
+	txDeps := *d
+	if err := fn(&txDeps); err != nil {
+		if err := tx.Rollback(); err != nil {
+			return err
+		}
+		return err
+	}
+	return tx.Commit()
+}
