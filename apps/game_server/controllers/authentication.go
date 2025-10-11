@@ -20,8 +20,7 @@ func (c *Controller) Signup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user := models.NewUser(params.UserName)
-	err = user.Save(deps)
+	user, err := models.CreateUser(deps, params.UserName)
 	if err != nil {
 		utils.RenderJSONError(w, err.Error(), http.StatusBadRequest)
 		return

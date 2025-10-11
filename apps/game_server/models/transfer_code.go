@@ -13,7 +13,7 @@ type TransferCode struct {
 	ID   int
 	Code string
 
-	User *User
+	User *User `validate:"-"`
 }
 
 func CreateTransferCode(deps *utils.Deps, user *User) (*TransferCode, error) {

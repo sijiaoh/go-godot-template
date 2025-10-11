@@ -13,7 +13,7 @@ type ClientSession struct {
 	ID    int
 	Token string
 
-	User *User
+	User *User `validate:"-"`
 }
 
 func CreateClientSession(deps *utils.Deps, user *User) (*ClientSession, error) {

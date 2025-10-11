@@ -11,11 +11,13 @@ func TestTransferCode_Rotate(t *testing.T) {
 	deps := testutils.NewTestDeps()
 	defer deps.Close()
 
-	user := CreateFooUser(t, deps)
-	tc := CreateTransferCode(t, deps, user)
+	user, err := models.CreateUser(&deps.Deps, "Foo")
+	testutils.AssertNoError(t, err)
+
+	tc := user.TransferCode
 	oldCode := tc.Code
 
-	err := tc.Rotate(&deps.Deps)
+	err = tc.Rotate(&deps.Deps)
 	testutils.AssertNoError(t, err)
 
 	testutils.AssertEqual(t, deps.EntClient.TransferCode.Query().CountX(deps.Ctx), 1)

@@ -12,13 +12,38 @@ type User struct {
 	ID   int
 	Name string `validate:"min_runes=1,max_runes=12"`
 
-	ClientSessions []*ClientSession
+	ClientSessions []*ClientSession `validate:"-"`
+	TransferCode   *TransferCode    `validate:"-"` // 生成用户时创建，必须存在
 }
 
 func NewUser(name string) *User {
 	return &User{
 		Name: name,
 	}
+}
+
+func CreateUser(deps *utils.Deps, name string) (*User, error) {
+	var user *User
+	err := deps.WithEntTx(func(txDeps *utils.Deps) error {
+		user = NewUser(name)
+
+		err := user.Save(deps)
+		if err != nil {
+			return err
+		}
+
+		_, err = CreateTransferCode(deps, user)
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
 }
 
 func NewUserFromEnt(entUser *ent.User) *User {
@@ -40,7 +65,7 @@ func (u *User) Save(deps *utils.Deps) error {
 		deps,
 		u.EntUser,
 		func() *ent.UserCreate { return deps.EntClient.User.Create() },
-		func() *ent.UserUpdateOne { return u.EntUser.Update() },
+		func() *ent.UserUpdateOne { return deps.EntClient.User.UpdateOneID(u.ID) },
 		func(mutation *ent.UserMutation) {
 			if u.EntUser == nil || u.Name != u.EntUser.Name {
 				mutation.SetName(u.Name)
@@ -68,5 +93,15 @@ func (u *User) LoadClientSessions(deps *utils.Deps) error {
 		u.ClientSessions = append(u.ClientSessions, cs)
 	}
 
+	return nil
+}
+
+func (u *User) LoadTransferCode(deps *utils.Deps) error {
+	entTransferCode, err := deps.EntClient.User.QueryTransferCode(u.EntUser).Only(deps.Ctx)
+	if err != nil {
+		return err
+	}
+
+	u.TransferCode = NewTransferCodeFromEnt(entTransferCode, u)
 	return nil
 }
