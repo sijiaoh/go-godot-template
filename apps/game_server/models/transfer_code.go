@@ -31,6 +31,7 @@ func CreateTransferCode(deps *utils.Deps, user *User) (*TransferCode, error) {
 	}
 
 	tc := NewTransferCodeFromEnt(entTC, user)
+	user.TransferCode = tc
 	return tc, nil
 }
 
