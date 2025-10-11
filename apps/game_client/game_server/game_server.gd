@@ -26,6 +26,12 @@ func me() -> UserSchema.MeResponse:
 	return response
 
 
+func get_transfer_code() -> TransferCodeSchema.GetTransferCodeResponse:
+	var response := TransferCodeSchema.GetTransferCodeResponse.new()
+	await request_get("/transfer-code", response)
+	return response
+
+
 func _request(method: int, url: String, params: HTTPParams, response: HTTPResponse) -> void:
 	await super._request(method, url, params, response)
 	if response.err == OK and response.status_code == 401:
