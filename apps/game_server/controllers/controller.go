@@ -10,9 +10,6 @@ import (
 
 type Controller struct {
 	entClient *ent.Client
-
-	currentUser          *models.User
-	currentClientSession *models.ClientSession
 }
 
 func NewController(entClient *ent.Client) *Controller {
@@ -25,31 +22,24 @@ func (c *Controller) renderJSON(w http.ResponseWriter, response interface{}) {
 	utils.RenderJSON(w, response)
 }
 
-func (c *Controller) authenticate(deps *utils.Deps, w http.ResponseWriter, r *http.Request) error {
+func (c *Controller) authenticate(deps *utils.Deps, w http.ResponseWriter, r *http.Request) (*models.User, *models.ClientSession, error) {
 	token := r.Header.Get("Authorization")[len("Bearer "):]
 	cs, err := models.FindClientSessionByToken(deps, token)
 	if err != nil {
 		utils.RenderJSONError(w, err.Error(), http.StatusUnauthorized)
-		return err
+		return nil, nil, err
 	}
 
 	if err := cs.LoadUser(deps); err != nil {
 		utils.RenderJSONError(w, err.Error(), http.StatusInternalServerError)
-		return err
+		return nil, nil, err
 	}
 
-	c.currentUser = cs.User
-	c.currentClientSession = cs
-
-	return nil
+	return cs.User, cs, nil
 }
 
-func (c *Controller) isLoggedIn() bool {
-	return c.currentUser != nil
-}
-
-func (c *Controller) requireLogin(w http.ResponseWriter) bool {
-	if !c.isLoggedIn() {
+func (c *Controller) requireLogin(w http.ResponseWriter, user *models.User) bool {
+	if user == nil {
 		utils.RenderJSONError(w, "Unauthorized", http.StatusUnauthorized)
 		return false
 	}
