@@ -4,9 +4,11 @@
 # res://http_helper/http_response.gd
 # res://title/title_screen.gd
 # res://game_server/me_schema.gd
+# res://game_server/transfer_code_schema.gd
 # res://game_server/signup_schema.gd
 # res://game_server/game_server.gd
 # res://game/game_screen.gd
+# res://game/transfer_code_label.gd
 # res://game/user_name_label.gd
 # res://main.gd
 # res://screen/screen_manager.gd
@@ -21,6 +23,7 @@
 # res://authentication/authentication_events.gd
 # res://authentication/token_store.gd
 # res://player/me.gd
+# res://player/transfer_code.gd
 # res://player/player_state.gd
 # res://main.tscn
 # res://title/title_screen.tscn
@@ -38,7 +41,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8-bit\n"
 
 #: game_server/game_server.gd
-msgid "网络请求失败"
+msgid "通信失败。"
 msgstr ""
 
 #: game_server/game_server.gd
