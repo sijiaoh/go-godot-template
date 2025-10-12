@@ -17,6 +17,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
+SingleFlight="*res://http_helper/single_flight.gd"
 ModalEvents="*res://modal/modal_events.gd"
 AuthenticationEvents="*res://authentication/authentication_events.gd"
 Authentication="*res://authentication/authentication.gd"

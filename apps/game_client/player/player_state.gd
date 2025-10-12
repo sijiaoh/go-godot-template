@@ -16,11 +16,17 @@ var _transfer_code: TransferCode
 
 func fetch_me() -> Me:
 	if _me == null:
-		_me = await Me.fetch()
+		_me = await SingleFlight.do(
+			"fetch_me",
+			Me.fetch,
+		)
 	return _me
 
 
 func fetch_transfer_code() -> TransferCode:
 	if _transfer_code == null:
-		_transfer_code = await TransferCode.fetch()
+		_transfer_code = await SingleFlight.do(
+			"fetch_transfer_code",
+			TransferCode.fetch,
+		)
 	return _transfer_code
