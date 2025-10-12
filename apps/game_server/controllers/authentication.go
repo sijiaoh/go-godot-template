@@ -12,15 +12,13 @@ type SignupParams struct {
 	UserName string `json:"userName"`
 }
 
-func (c *Controller) Signup(w http.ResponseWriter, r *http.Request) {
-	deps := utils.NewDeps(c.entClient, r.Context())
-
+func (c *Controller) Signup(w http.ResponseWriter, r *http.Request, d *utils.Deps) {
 	params, err := utils.ParseJsonBody[SignupParams](w, r.Body)
 	if err != nil {
 		return
 	}
 
-	user, err := models.CreateUser(deps, params.UserName)
+	user, err := models.CreateUser(d, params.UserName)
 	if err != nil {
 		utils.RenderJSONError(w, err.Error(), http.StatusBadRequest)
 		return
@@ -28,7 +26,7 @@ func (c *Controller) Signup(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusCreated)
 
-	cs, err := models.CreateClientSession(deps, user)
+	cs, err := models.CreateClientSession(d, user)
 	if err != nil {
 		utils.RenderJSONError(w, err.Error(), http.StatusInternalServerError)
 		return

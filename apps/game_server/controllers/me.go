@@ -7,9 +7,8 @@ import (
 	"github.com/sijiaoh/go-godot-template/game_server/utils"
 )
 
-func (c *Controller) ShowMe(w http.ResponseWriter, r *http.Request) {
-	deps := utils.NewDeps(c.entClient, r.Context())
-	user, _, err := c.authenticate(deps, w, r, true)
+func (c *Controller) ShowMe(w http.ResponseWriter, r *http.Request, d *utils.Deps) {
+	user, _, err := c.authenticate(d, w, r, true)
 	if err != nil {
 		return
 	}

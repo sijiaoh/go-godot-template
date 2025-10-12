@@ -20,12 +20,12 @@ func NewRouter(entClient *ent.Client) *chi.Mux {
 
 	controller := controllers.NewController(entClient)
 
-	router.Post("/signup", controller.Signup)
+	router.Post("/signup", controller.ToHandler(controller.Signup))
 
-	router.Get("/me", controller.ShowMe)
+	router.Get("/me", controller.ToHandler(controller.ShowMe))
 
-	router.Get("/transfer-code", controller.ShowTransferCode)
-	router.Post("/transfer-code/rotate", controller.RotateTransferCode)
+	router.Get("/transfer-code", controller.ToHandler(controller.ShowTransferCode))
+	router.Post("/transfer-code/rotate", controller.ToHandler(controller.RotateTransferCode))
 
 	return router
 }
