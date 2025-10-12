@@ -9,11 +9,8 @@ import (
 
 func (c *Controller) ShowMe(w http.ResponseWriter, r *http.Request) {
 	deps := utils.NewDeps(c.entClient, r.Context())
-	user, _, err := c.authenticate(deps, w, r)
+	user, _, err := c.authenticate(deps, w, r, true)
 	if err != nil {
-		return
-	}
-	if !c.requireLogin(w, user) {
 		return
 	}
 

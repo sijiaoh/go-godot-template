@@ -22,7 +22,7 @@ func (c *Controller) renderJSON(w http.ResponseWriter, response interface{}) {
 	utils.RenderJSON(w, response)
 }
 
-func (c *Controller) authenticate(deps *utils.Deps, w http.ResponseWriter, r *http.Request) (*models.User, *models.ClientSession, error) {
+func (c *Controller) authenticate(deps *utils.Deps, w http.ResponseWriter, r *http.Request, requireLogin bool) (*models.User, *models.ClientSession, error) {
 	token := r.Header.Get("Authorization")[len("Bearer "):]
 	cs, err := models.FindClientSessionByToken(deps, token)
 	if err != nil {
@@ -35,13 +35,14 @@ func (c *Controller) authenticate(deps *utils.Deps, w http.ResponseWriter, r *ht
 		return nil, nil, err
 	}
 
-	return cs.User, cs, nil
-}
-
-func (c *Controller) requireLogin(w http.ResponseWriter, user *models.User) bool {
-	if user == nil {
+	if requireLogin && cs == nil {
 		utils.RenderJSONError(w, "Unauthorized", http.StatusUnauthorized)
-		return false
+		return nil, nil, &UnauthorizedError{}
 	}
-	return true
+
+	if cs == nil {
+		return nil, nil, nil
+	}
+
+	return cs.User, cs, nil
 }
