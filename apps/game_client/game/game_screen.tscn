@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://biievcx7tx62i"]
+[gd_scene load_steps=7 format=3 uid="uid://biievcx7tx62i"]
 
 [ext_resource type="Script" uid="uid://crsjdm0vmnf26" path="res://game/game_screen.gd" id="1_p6hro"]
 [ext_resource type="Resource" uid="uid://d2p01iman3a6g" path="res://game/game_screen_entry.tres" id="2_f8ett"]
 [ext_resource type="Script" uid="uid://qbqpwpj4wno3" path="res://player/player_state.gd" id="2_wkah5"]
 [ext_resource type="Script" uid="uid://kmxs02aemhkn" path="res://game/user_name_label.gd" id="4_f8ett"]
 [ext_resource type="Script" uid="uid://ggd6v6scnpbr" path="res://game/transfer_code_label.gd" id="5_emryg"]
+[ext_resource type="Script" uid="uid://6vrcbe6kiqp" path="res://game/rotate_transfer_code_button.gd" id="6_7vs1t"]
 
 [node name="GameScreen" type="Node2D"]
 script = ExtResource("1_p6hro")
@@ -35,3 +36,8 @@ script = ExtResource("4_f8ett")
 [node name="TransferCodeLabel" type="Label" parent="CanvasLayer/Control/VBoxContainer"]
 layout_mode = 2
 script = ExtResource("5_emryg")
+
+[node name="RotateTransferCodeButton" type="Button" parent="CanvasLayer/Control/VBoxContainer"]
+layout_mode = 2
+text = "重新生成"
+script = ExtResource("6_7vs1t")

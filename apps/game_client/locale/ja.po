@@ -60,5 +60,6 @@ msgstr "ユーザー名"
 msgid "登录"
 msgstr "登録"
 
-#~ msgid "网络请求失败"
-#~ msgstr "リクエストに失敗しました"
+#: game/game_screen.tscn
+msgid "重新生成"
+msgstr "再生成"

@@ -86,3 +86,7 @@ msgstr ""
 #: title/title_screen.tscn
 msgid "登录"
 msgstr ""
+
+#: game/game_screen.tscn
+msgid "重新生成"
+msgstr ""

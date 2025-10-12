@@ -32,6 +32,12 @@ func get_transfer_code() -> TransferCodeSchema.GetTransferCodeResponse:
 	return response
 
 
+func rotate_transfer_code() -> TransferCodeSchema.RotateTransferCodeResponse:
+	var response := TransferCodeSchema.RotateTransferCodeResponse.new()
+	await request_post("/transfer-code/rotate", null, response)
+	return response
+
+
 func _request(method: int, url: String, params: HTTPParams, response: HTTPResponse) -> void:
 	await super._request(method, url, params, response)
 	if response.err == OK and response.status_code == 401:
