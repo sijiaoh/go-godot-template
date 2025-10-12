@@ -21,9 +21,8 @@ func ExampleSave() {
 
 	entUser, err := utils.Save(
 		&deps.Deps,
-		user.EntUser,
-		func() *ent.UserCreate { return deps.EntClient.User.Create() },
-		func() *ent.UserUpdateOne { return deps.EntClient.User.UpdateOneID(user.ID) },
+		user,
+		deps.EntClient.User,
 		func(mutation *ent.UserMutation) {
 			if user.EntUser == nil || user.Name != user.EntUser.Name {
 				mutation.SetName(user.Name)

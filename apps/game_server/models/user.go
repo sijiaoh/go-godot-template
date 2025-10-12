@@ -55,6 +55,10 @@ func NewUserFromEnt(entUser *ent.User) *User {
 	}
 }
 
+func (u *User) GetID() int { return u.ID }
+
+func (u *User) EntObj() *ent.User { return u.EntUser }
+
 func (u *User) Save(deps *utils.Deps) error {
 	err := validators.Validate().Struct(u)
 	if err != nil {
@@ -63,9 +67,8 @@ func (u *User) Save(deps *utils.Deps) error {
 
 	entUser, err := utils.Save(
 		deps,
-		u.EntUser,
-		func() *ent.UserCreate { return deps.EntClient.User.Create() },
-		func() *ent.UserUpdateOne { return deps.EntClient.User.UpdateOneID(u.ID) },
+		u,
+		deps.EntClient.User,
 		func(mutation *ent.UserMutation) {
 			if u.EntUser == nil || u.Name != u.EntUser.Name {
 				mutation.SetName(u.Name)
