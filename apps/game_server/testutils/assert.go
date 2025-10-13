@@ -12,6 +12,12 @@ func AssertNoError(t *testing.T, err error) {
 	}
 }
 
+func AssertWithError(t *testing.T, err error) {
+	if err == nil {
+		t.Fatalf("expected error, got nil")
+	}
+}
+
 func AssertEqual[T comparable](t *testing.T, got, expected T) {
 	if got != expected {
 		t.Fatalf("expected %v, got %v", expected, got)

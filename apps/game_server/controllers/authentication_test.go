@@ -54,3 +54,30 @@ func TestSignup_BadRequest(t *testing.T) {
 
 	testutils.AssertEqual(t, entClient.User.Query().CountX(ctx), 0)
 }
+
+func TestLogin(t *testing.T) {
+	testServer := testutils.NewTestServer()
+	defer testServer.Close()
+
+	entClient := testServer.EntClient
+	router := testServer.Router
+	ctx := context.Background()
+
+	testutils.Signup(t, router, "Foo")
+
+	params := controllers.LoginParams{
+		TransferCode: entClient.TransferCode.Query().FirstX(ctx).Code,
+	}
+	response := testutils.JSONRequest(t, router, nil, http.MethodPost, "/login", params)
+	testutils.AssertResponseCode(t, response.Code, http.StatusCreated)
+
+	testutils.AssertEqual(t, entClient.User.Query().CountX(ctx), 1)
+	testutils.AssertEqual(t, entClient.ClientSession.Query().CountX(ctx), 2)
+
+	var res serializers.ClientSessionSerializer
+	err := json.Unmarshal(response.Body.Bytes(), &res)
+	testutils.AssertNoError(t, err)
+
+	response = testutils.JSONRequest(t, router, &res.Token, http.MethodGet, "/me", nil)
+	testutils.AssertResponseCode(t, response.Code, http.StatusOK)
+}
