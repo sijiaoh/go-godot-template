@@ -63,3 +63,7 @@ msgstr "登録"
 #: game/game_screen.tscn
 msgid "重新生成"
 msgstr "再生成"
+
+#: game/game_screen.tscn
+msgid "返回开始界面"
+msgstr "タイトル画面に戻る"

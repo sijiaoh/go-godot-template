@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://biievcx7tx62i"]
+[gd_scene load_steps=8 format=3 uid="uid://biievcx7tx62i"]
 
 [ext_resource type="Script" uid="uid://crsjdm0vmnf26" path="res://game/game_screen.gd" id="1_p6hro"]
 [ext_resource type="Resource" uid="uid://d2p01iman3a6g" path="res://game/game_screen_entry.tres" id="2_f8ett"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://kmxs02aemhkn" path="res://game/user_name_label.gd" id="4_f8ett"]
 [ext_resource type="Script" uid="uid://ggd6v6scnpbr" path="res://game/transfer_code_label.gd" id="5_emryg"]
 [ext_resource type="Script" uid="uid://6vrcbe6kiqp" path="res://game/rotate_transfer_code_button.gd" id="6_7vs1t"]
+[ext_resource type="Script" uid="uid://beq1x8pf61vtk" path="res://game/to_title_button.gd" id="7_lol8h"]
 
 [node name="GameScreen" type="Node2D"]
 script = ExtResource("1_p6hro")
@@ -41,3 +42,8 @@ script = ExtResource("5_emryg")
 layout_mode = 2
 text = "重新生成"
 script = ExtResource("6_7vs1t")
+
+[node name="ToTitleButton" type="Button" parent="CanvasLayer/Control/VBoxContainer"]
+layout_mode = 2
+text = "返回开始界面"
+script = ExtResource("7_lol8h")
