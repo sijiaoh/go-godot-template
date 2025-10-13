@@ -12,7 +12,7 @@ type TestDeps struct {
 }
 
 func NewTestDeps() *TestDeps {
-	entClient := repositories.NewEntClient()
+	entClient := repositories.NewEntClient(true)
 	utils.NewDeps(entClient, context.Background())
 	return &TestDeps{
 		Deps: *utils.NewDeps(entClient, context.Background()),

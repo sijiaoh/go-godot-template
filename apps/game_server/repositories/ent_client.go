@@ -8,8 +8,14 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func NewEntClient() *ent.Client {
-	entClient, err := ent.Open("sqlite3", "file:ent?mode=memory&cache=shared&_fk=1")
+func NewEntClient(memory bool) *ent.Client {
+	dataSourceName := "file:tmp/ent.db?cache=shared&_fk=1"
+	if memory {
+		dataSourceName = dataSourceName + "&mode=memory"
+	} else {
+		dataSourceName = dataSourceName + "&mode=rwc"
+	}
+	entClient, err := ent.Open("sqlite3", dataSourceName)
 	if err != nil {
 		panic(err)
 	}
