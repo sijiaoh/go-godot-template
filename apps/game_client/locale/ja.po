@@ -25,8 +25,12 @@ msgid "请检查网络连接或稍后重试。"
 msgstr "ネットワーク接続を確認するか、時間を置いてもう一度お試しください。"
 
 #: authentication/authentication.gd
+msgid "注册失败"
+msgstr "新規登録失敗"
+
+#: authentication/authentication.gd
 msgid "登录失败"
-msgstr "登録失敗"
+msgstr "ログイン失敗"
 
 #: authentication/authentication.gd
 msgid "认证失败，请重新登录。"
@@ -57,8 +61,20 @@ msgid "用户名"
 msgstr "ユーザー名"
 
 #: title/title_screen.tscn
+msgid "注册"
+msgstr "新規登録"
+
+#: title/title_screen.tscn
+msgid "使用转移码登录"
+msgstr "引き継ぎコードでログイン"
+
+#: title/title_screen.tscn
+msgid "转移码"
+msgstr "引き継ぎコード"
+
+#: title/title_screen.tscn
 msgid "登录"
-msgstr "登録"
+msgstr "ログイン"
 
 #: game/game_screen.tscn
 msgid "重新生成"

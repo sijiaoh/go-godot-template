@@ -13,16 +13,30 @@ func _ready() -> void:
 
 
 func signup(user_name: String) -> void:
-	var params = SignupSchema.SignupParams.new(user_name)
+	var params = AuthenticationSchema.SignupParams.new(user_name)
 	var res := await GameServer.signup(params)
 
 	if res.status_code != 201:
-		ModalEvents.open_modal.emit(tr("登录失败") + ": err=%s status_code=%s" % [res.err, res.status_code])
+		ModalEvents.open_modal.emit(tr("注册失败") + ": err=%s status_code=%s" % [res.err, res.status_code])
 		return
 
 	TokenStore.set_token(res.token())
 	GameServer.load_token()
 	is_logged_in = true
+
+
+func login(transfer_code: String) -> bool:
+	var params = AuthenticationSchema.LoginParams.new(transfer_code)
+	var res := await GameServer.login(params)
+
+	if res.status_code != 201:
+		ModalEvents.open_modal.emit(tr("登录失败") + ": err=%s status_code=%s" % [res.err, res.status_code])
+		return false
+
+	TokenStore.set_token(res.token())
+	GameServer.load_token()
+	is_logged_in = true
+	return true
 
 
 func _on_unauthorized() -> void:
