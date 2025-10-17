@@ -13,7 +13,7 @@ type TestServer struct {
 }
 
 func NewTestServer() *TestServer {
-	entClient := repositories.NewEntClient(true)
+	entClient := repositories.NewEntClient()
 	router := routes.NewRouter(entClient)
 
 	return &TestServer{

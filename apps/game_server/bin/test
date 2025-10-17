@@ -1,5 +1,7 @@
 #!/bin/bash -eu
 
+export APP_ENV=test
+
 source ./bin/load_env.sh
 
-air
+go test "$@"

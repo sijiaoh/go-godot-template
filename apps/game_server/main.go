@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	entClient := repositories.NewEntClient(false)
+	entClient := repositories.NewEntClient()
 	defer entClient.Close()
 
 	router := routes.NewRouter(entClient)

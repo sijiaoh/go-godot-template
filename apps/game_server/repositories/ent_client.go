@@ -2,18 +2,17 @@ package repositories
 
 import (
 	"context"
+	"os"
 
 	"github.com/sijiaoh/go-godot-template/game_server/ent"
 
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func NewEntClient(memory bool) *ent.Client {
-	dataSourceName := "file:tmp/ent.db?cache=shared&_fk=1"
-	if memory {
-		dataSourceName = dataSourceName + "&mode=memory"
-	} else {
-		dataSourceName = dataSourceName + "&mode=rwc"
+func NewEntClient() *ent.Client {
+	dataSourceName, ok := os.LookupEnv("DB_URL")
+	if !ok {
+		panic("DB_URL environment variable is not set")
 	}
 	entClient, err := ent.Open("sqlite3", dataSourceName)
 	if err != nil {
