@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 
-	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/sijiaoh/go-godot-template/game_server/ent/clientsession"
@@ -19,7 +18,6 @@ type ClientSessionCreate struct {
 	config
 	mutation *ClientSessionMutation
 	hooks    []Hook
-	conflict []sql.ConflictOption
 }
 
 // SetToken sets the "token" field.
@@ -105,7 +103,6 @@ func (_c *ClientSessionCreate) createSpec() (*ClientSession, *sqlgraph.CreateSpe
 		_node = &ClientSession{config: _c.config}
 		_spec = sqlgraph.NewCreateSpec(clientsession.Table, sqlgraph.NewFieldSpec(clientsession.FieldID, field.TypeInt))
 	)
-	_spec.OnConflict = _c.conflict
 	if value, ok := _c.mutation.Token(); ok {
 		_spec.SetField(clientsession.FieldToken, field.TypeString, value)
 		_node.Token = value
@@ -130,160 +127,11 @@ func (_c *ClientSessionCreate) createSpec() (*ClientSession, *sqlgraph.CreateSpe
 	return _node, _spec
 }
 
-// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
-// of the `INSERT` statement. For example:
-//
-//	client.ClientSession.Create().
-//		SetToken(v).
-//		OnConflict(
-//			// Update the row with the new values
-//			// the was proposed for insertion.
-//			sql.ResolveWithNewValues(),
-//		).
-//		// Override some of the fields with custom
-//		// update values.
-//		Update(func(u *ent.ClientSessionUpsert) {
-//			SetToken(v+v).
-//		}).
-//		Exec(ctx)
-func (_c *ClientSessionCreate) OnConflict(opts ...sql.ConflictOption) *ClientSessionUpsertOne {
-	_c.conflict = opts
-	return &ClientSessionUpsertOne{
-		create: _c,
-	}
-}
-
-// OnConflictColumns calls `OnConflict` and configures the columns
-// as conflict target. Using this option is equivalent to using:
-//
-//	client.ClientSession.Create().
-//		OnConflict(sql.ConflictColumns(columns...)).
-//		Exec(ctx)
-func (_c *ClientSessionCreate) OnConflictColumns(columns ...string) *ClientSessionUpsertOne {
-	_c.conflict = append(_c.conflict, sql.ConflictColumns(columns...))
-	return &ClientSessionUpsertOne{
-		create: _c,
-	}
-}
-
-type (
-	// ClientSessionUpsertOne is the builder for "upsert"-ing
-	//  one ClientSession node.
-	ClientSessionUpsertOne struct {
-		create *ClientSessionCreate
-	}
-
-	// ClientSessionUpsert is the "OnConflict" setter.
-	ClientSessionUpsert struct {
-		*sql.UpdateSet
-	}
-)
-
-// SetToken sets the "token" field.
-func (u *ClientSessionUpsert) SetToken(v string) *ClientSessionUpsert {
-	u.Set(clientsession.FieldToken, v)
-	return u
-}
-
-// UpdateToken sets the "token" field to the value that was provided on create.
-func (u *ClientSessionUpsert) UpdateToken() *ClientSessionUpsert {
-	u.SetExcluded(clientsession.FieldToken)
-	return u
-}
-
-// UpdateNewValues updates the mutable fields using the new values that were set on create.
-// Using this option is equivalent to using:
-//
-//	client.ClientSession.Create().
-//		OnConflict(
-//			sql.ResolveWithNewValues(),
-//		).
-//		Exec(ctx)
-func (u *ClientSessionUpsertOne) UpdateNewValues() *ClientSessionUpsertOne {
-	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
-	return u
-}
-
-// Ignore sets each column to itself in case of conflict.
-// Using this option is equivalent to using:
-//
-//	client.ClientSession.Create().
-//	    OnConflict(sql.ResolveWithIgnore()).
-//	    Exec(ctx)
-func (u *ClientSessionUpsertOne) Ignore() *ClientSessionUpsertOne {
-	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
-	return u
-}
-
-// DoNothing configures the conflict_action to `DO NOTHING`.
-// Supported only by SQLite and PostgreSQL.
-func (u *ClientSessionUpsertOne) DoNothing() *ClientSessionUpsertOne {
-	u.create.conflict = append(u.create.conflict, sql.DoNothing())
-	return u
-}
-
-// Update allows overriding fields `UPDATE` values. See the ClientSessionCreate.OnConflict
-// documentation for more info.
-func (u *ClientSessionUpsertOne) Update(set func(*ClientSessionUpsert)) *ClientSessionUpsertOne {
-	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
-		set(&ClientSessionUpsert{UpdateSet: update})
-	}))
-	return u
-}
-
-// SetToken sets the "token" field.
-func (u *ClientSessionUpsertOne) SetToken(v string) *ClientSessionUpsertOne {
-	return u.Update(func(s *ClientSessionUpsert) {
-		s.SetToken(v)
-	})
-}
-
-// UpdateToken sets the "token" field to the value that was provided on create.
-func (u *ClientSessionUpsertOne) UpdateToken() *ClientSessionUpsertOne {
-	return u.Update(func(s *ClientSessionUpsert) {
-		s.UpdateToken()
-	})
-}
-
-// Exec executes the query.
-func (u *ClientSessionUpsertOne) Exec(ctx context.Context) error {
-	if len(u.create.conflict) == 0 {
-		return errors.New("ent: missing options for ClientSessionCreate.OnConflict")
-	}
-	return u.create.Exec(ctx)
-}
-
-// ExecX is like Exec, but panics if an error occurs.
-func (u *ClientSessionUpsertOne) ExecX(ctx context.Context) {
-	if err := u.create.Exec(ctx); err != nil {
-		panic(err)
-	}
-}
-
-// Exec executes the UPSERT query and returns the inserted/updated ID.
-func (u *ClientSessionUpsertOne) ID(ctx context.Context) (id int, err error) {
-	node, err := u.create.Save(ctx)
-	if err != nil {
-		return id, err
-	}
-	return node.ID, nil
-}
-
-// IDX is like ID, but panics if an error occurs.
-func (u *ClientSessionUpsertOne) IDX(ctx context.Context) int {
-	id, err := u.ID(ctx)
-	if err != nil {
-		panic(err)
-	}
-	return id
-}
-
 // ClientSessionCreateBulk is the builder for creating many ClientSession entities in bulk.
 type ClientSessionCreateBulk struct {
 	config
 	err      error
 	builders []*ClientSessionCreate
-	conflict []sql.ConflictOption
 }
 
 // Save creates the ClientSession entities in the database.
@@ -312,7 +160,6 @@ func (_c *ClientSessionCreateBulk) Save(ctx context.Context) ([]*ClientSession, 
 					_, err = mutators[i+1].Mutate(root, _c.builders[i+1].mutation)
 				} else {
 					spec := &sqlgraph.BatchCreateSpec{Nodes: specs}
-					spec.OnConflict = _c.conflict
 					// Invoke the actual operation on the latest mutation in the chain.
 					if err = sqlgraph.BatchCreate(ctx, _c.driver, spec); err != nil {
 						if sqlgraph.IsConstraintError(err) {
@@ -363,124 +210,6 @@ func (_c *ClientSessionCreateBulk) Exec(ctx context.Context) error {
 // ExecX is like Exec, but panics if an error occurs.
 func (_c *ClientSessionCreateBulk) ExecX(ctx context.Context) {
 	if err := _c.Exec(ctx); err != nil {
-		panic(err)
-	}
-}
-
-// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
-// of the `INSERT` statement. For example:
-//
-//	client.ClientSession.CreateBulk(builders...).
-//		OnConflict(
-//			// Update the row with the new values
-//			// the was proposed for insertion.
-//			sql.ResolveWithNewValues(),
-//		).
-//		// Override some of the fields with custom
-//		// update values.
-//		Update(func(u *ent.ClientSessionUpsert) {
-//			SetToken(v+v).
-//		}).
-//		Exec(ctx)
-func (_c *ClientSessionCreateBulk) OnConflict(opts ...sql.ConflictOption) *ClientSessionUpsertBulk {
-	_c.conflict = opts
-	return &ClientSessionUpsertBulk{
-		create: _c,
-	}
-}
-
-// OnConflictColumns calls `OnConflict` and configures the columns
-// as conflict target. Using this option is equivalent to using:
-//
-//	client.ClientSession.Create().
-//		OnConflict(sql.ConflictColumns(columns...)).
-//		Exec(ctx)
-func (_c *ClientSessionCreateBulk) OnConflictColumns(columns ...string) *ClientSessionUpsertBulk {
-	_c.conflict = append(_c.conflict, sql.ConflictColumns(columns...))
-	return &ClientSessionUpsertBulk{
-		create: _c,
-	}
-}
-
-// ClientSessionUpsertBulk is the builder for "upsert"-ing
-// a bulk of ClientSession nodes.
-type ClientSessionUpsertBulk struct {
-	create *ClientSessionCreateBulk
-}
-
-// UpdateNewValues updates the mutable fields using the new values that
-// were set on create. Using this option is equivalent to using:
-//
-//	client.ClientSession.Create().
-//		OnConflict(
-//			sql.ResolveWithNewValues(),
-//		).
-//		Exec(ctx)
-func (u *ClientSessionUpsertBulk) UpdateNewValues() *ClientSessionUpsertBulk {
-	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
-	return u
-}
-
-// Ignore sets each column to itself in case of conflict.
-// Using this option is equivalent to using:
-//
-//	client.ClientSession.Create().
-//		OnConflict(sql.ResolveWithIgnore()).
-//		Exec(ctx)
-func (u *ClientSessionUpsertBulk) Ignore() *ClientSessionUpsertBulk {
-	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
-	return u
-}
-
-// DoNothing configures the conflict_action to `DO NOTHING`.
-// Supported only by SQLite and PostgreSQL.
-func (u *ClientSessionUpsertBulk) DoNothing() *ClientSessionUpsertBulk {
-	u.create.conflict = append(u.create.conflict, sql.DoNothing())
-	return u
-}
-
-// Update allows overriding fields `UPDATE` values. See the ClientSessionCreateBulk.OnConflict
-// documentation for more info.
-func (u *ClientSessionUpsertBulk) Update(set func(*ClientSessionUpsert)) *ClientSessionUpsertBulk {
-	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
-		set(&ClientSessionUpsert{UpdateSet: update})
-	}))
-	return u
-}
-
-// SetToken sets the "token" field.
-func (u *ClientSessionUpsertBulk) SetToken(v string) *ClientSessionUpsertBulk {
-	return u.Update(func(s *ClientSessionUpsert) {
-		s.SetToken(v)
-	})
-}
-
-// UpdateToken sets the "token" field to the value that was provided on create.
-func (u *ClientSessionUpsertBulk) UpdateToken() *ClientSessionUpsertBulk {
-	return u.Update(func(s *ClientSessionUpsert) {
-		s.UpdateToken()
-	})
-}
-
-// Exec executes the query.
-func (u *ClientSessionUpsertBulk) Exec(ctx context.Context) error {
-	if u.create.err != nil {
-		return u.create.err
-	}
-	for i, b := range u.create.builders {
-		if len(b.conflict) != 0 {
-			return fmt.Errorf("ent: OnConflict was set for builder %d. Set it on the ClientSessionCreateBulk instead", i)
-		}
-	}
-	if len(u.create.conflict) == 0 {
-		return errors.New("ent: missing options for ClientSessionCreateBulk.OnConflict")
-	}
-	return u.create.Exec(ctx)
-}
-
-// ExecX is like Exec, but panics if an error occurs.
-func (u *ClientSessionUpsertBulk) ExecX(ctx context.Context) {
-	if err := u.create.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
