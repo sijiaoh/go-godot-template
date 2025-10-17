@@ -1,0 +1,76 @@
+#!/bin/bash -eu
+
+source ./bin/load_env.sh
+
+function diff() {
+  atlas migrate diff "$1" \
+    --dir "file://ent/migrate/migrations" \
+    --to "ent://ent/schema" \
+    --dev-url "sqlite://file?mode=memory&_fk=1"
+}
+
+function apply() {
+  atlas migrate apply \
+    --dir "file://ent/migrate/migrations" \
+    --url "${DB_URL}"
+}
+
+function lint() {
+  atlas migrate lint \
+    --dev-url="sqlite://file?mode=memory&_fk=1" \
+    --dir="file://ent/migrate/migrations" \
+    --latest=1
+}
+
+if [[ $# -eq 0 ]]; then
+  echo "No command provided. Use '$0 help' for a list of commands."
+  exit 1
+fi
+
+while [[ $# -gt 0 ]]; do
+  case $1 in
+  help | --help | -h)
+    echo "Usage: $0 <command>"
+    echo "Commands:"
+    echo "  diff    Generate a new migration file based on schema changes"
+    echo "  apply   Apply all pending migrations to the database"
+    exit 0
+    ;;
+  --)
+    shift
+    break
+    ;;
+  -*)
+    echo "Unknown option: $1"
+    exit 1
+    ;;
+  *)
+    break
+    ;;
+  esac
+done
+
+case $1 in
+diff)
+  if [[ -z "${2:-}" ]]; then
+    echo "Usage: $0 diff <migration_name>"
+    exit 1
+  fi
+
+  diff "$2"
+  shift
+  ;;
+apply)
+  apply
+  shift
+  ;;
+lint)
+  lint
+  shift
+  ;;
+*)
+  echo "Unknown command: $1"
+  echo "Use '$0 help' for a list of commands."
+  exit 1
+  ;;
+esac
