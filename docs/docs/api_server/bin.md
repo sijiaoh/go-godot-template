@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # 脚本
 
-通常使用`bin/`下的脚本来操作游戏服务器。
+通常使用`bin/`下的脚本来操控游戏服务器。
 
 ## load_env.sh
 
