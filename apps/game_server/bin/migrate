@@ -1,5 +1,9 @@
 #!/bin/bash -eu
 
+if ! command -v atlas &>/dev/null; then
+  curl -sSf https://atlasgo.sh | sh -s -- -y
+fi
+
 source ./bin/load_env.sh
 
 function diff() {
