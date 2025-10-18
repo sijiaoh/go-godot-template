@@ -26,4 +26,21 @@ jobs:
           cache-dependency-path: "apps/game_server/go.sum"
 
       - name: Run tests
-        run: go test ./...
+        run: ./bin/test ./...
+
+  migration_lint:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./apps/game_server
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: "apps/game_server/go.mod"
+          cache-dependency-path: "apps/game_server/go.sum"
+
+      - name: Run tests
+        run: ./bin/migrate lint
