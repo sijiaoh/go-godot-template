@@ -34,4 +34,4 @@ Controller通常和URL1:1对应。
 
 ### Routes
 
-URL和Controller的映射关系定义在[这里](./routes/router.go)。
+URL和Controller的映射关系定义在`./routes/router.go`。
