@@ -1,6 +1,6 @@
 # .env
 
-用于管理开发中的[环境变量](./global_environment.md)。
+用于管理开发中的[环境变量](./global-environment.md)。
 
 ## 开发环境
 

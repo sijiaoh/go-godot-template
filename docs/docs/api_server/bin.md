@@ -12,7 +12,7 @@ sidebar_position: 2
 
 作用：
 
-- 设置[APP_ENV](./global_environment.md#APP_ENV)默认值
+- 设置[APP_ENV](./global-environment.md#APP_ENV)默认值
     - development。
 - 根据`APP_ENV`值读取[.env](./dotenv.md)内容。
 
