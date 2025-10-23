@@ -27,12 +27,12 @@ func CreateUser(deps *utils.Deps, name string) (*User, error) {
 	err := deps.WithEntTx(func(txDeps *utils.Deps) error {
 		user = NewUser(name)
 
-		err := user.Save(deps)
+		err := user.Save(txDeps)
 		if err != nil {
 			return err
 		}
 
-		_, err = CreateTransferCode(deps, user)
+		_, err = CreateTransferCode(txDeps, user)
 		if err != nil {
 			return err
 		}
