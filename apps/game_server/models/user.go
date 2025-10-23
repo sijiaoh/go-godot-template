@@ -91,6 +91,7 @@ func (u *User) LoadClientSessions(deps *utils.Deps) error {
 		return err
 	}
 
+	u.ClientSessions = []*ClientSession{}
 	for _, ecs := range entClientSessions {
 		cs := NewClientSessionFromEnt(ecs, u)
 		u.ClientSessions = append(u.ClientSessions, cs)
