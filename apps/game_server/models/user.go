@@ -32,10 +32,11 @@ func CreateUser(deps *utils.Deps, name string) (*User, error) {
 			return err
 		}
 
-		_, err = CreateTransferCode(txDeps, user)
+		tc, err := CreateTransferCode(txDeps, user)
 		if err != nil {
 			return err
 		}
+		user.TransferCode = tc
 
 		return nil
 	})
@@ -86,26 +87,39 @@ func (u *User) Save(deps *utils.Deps) error {
 }
 
 func (u *User) LoadClientSessions(deps *utils.Deps) error {
-	entClientSessions, err := deps.EntClient.User.QueryClientSessions(u.EntUser).All(deps.Ctx)
-	if err != nil {
-		return err
+	entClientSessions := u.EntUser.Edges.ClientSessions
+	if entClientSessions == nil {
+		var err error
+		entClientSessions, err = deps.EntClient.User.QueryClientSessions(u.EntUser).All(deps.Ctx)
+		if err != nil {
+			return err
+		}
 	}
 
-	u.ClientSessions = []*ClientSession{}
-	for _, ecs := range entClientSessions {
-		cs := NewClientSessionFromEnt(ecs, u)
-		u.ClientSessions = append(u.ClientSessions, cs)
+	if u.ClientSessions == nil {
+		u.ClientSessions = make([]*ClientSession, 0, len(entClientSessions))
+		for _, ecs := range entClientSessions {
+			cs := NewClientSessionFromEnt(ecs, u)
+			u.ClientSessions = append(u.ClientSessions, cs)
+		}
 	}
 
 	return nil
 }
 
 func (u *User) LoadTransferCode(deps *utils.Deps) error {
-	entTransferCode, err := deps.EntClient.User.QueryTransferCode(u.EntUser).Only(deps.Ctx)
-	if err != nil {
-		return err
+	entTransferCode := u.EntUser.Edges.TransferCode
+	if entTransferCode == nil {
+		var err error
+		entTransferCode, err = deps.EntClient.User.QueryTransferCode(u.EntUser).Only(deps.Ctx)
+		if err != nil {
+			return err
+		}
 	}
 
-	u.TransferCode = NewTransferCodeFromEnt(entTransferCode, u)
+	if u.TransferCode == nil {
+		u.TransferCode = NewTransferCodeFromEnt(entTransferCode, u)
+	}
+
 	return nil
 }

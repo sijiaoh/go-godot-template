@@ -31,7 +31,6 @@ func CreateClientSession(deps *utils.Deps, user *User) (*ClientSession, error) {
 	}
 
 	cs := NewClientSessionFromEnt(entCS, user)
-	user.ClientSessions = append(user.ClientSessions, cs)
 	return cs, nil
 }
 
