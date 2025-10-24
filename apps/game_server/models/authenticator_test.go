@@ -21,9 +21,6 @@ func TestAuthenticator_Login(t *testing.T) {
 	auth := models.NewAuthenticator()
 	cs, err := auth.Login(&deps.Deps, user.TransferCode.Code)
 	testutils.AssertNoError(t, err)
-
-	err = cs.LoadUser(&deps.Deps)
-	testutils.AssertNoError(t, err)
 	testutils.AssertEqual(t, cs.User.ID, user.ID)
 
 	testutils.AssertEqual(t, entClient.ClientSession.Query().CountX(deps.Ctx), 1)

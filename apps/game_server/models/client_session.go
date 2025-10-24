@@ -7,6 +7,12 @@ import (
 	"github.com/sijiaoh/go-godot-template/game_server/utils"
 )
 
+type ClientSessionPreload int
+
+const (
+	ClientSessionPreloadUser ClientSessionPreload = iota
+)
+
 type ClientSession struct {
 	EntClientSession *ent.ClientSession
 
@@ -35,34 +41,37 @@ func CreateClientSession(deps *utils.Deps, user *User) (*ClientSession, error) {
 }
 
 func NewClientSessionFromEnt(ecs *ent.ClientSession, user *User) *ClientSession {
-	return &ClientSession{
+	cs := &ClientSession{
 		EntClientSession: ecs,
 
 		ID:    ecs.ID,
 		Token: ecs.Token,
-
-		User: user,
 	}
+
+	if user != nil {
+		cs.User = user
+	} else if ecs.Edges.User != nil {
+		cs.User = NewUserFromEnt(ecs.Edges.User)
+	}
+
+	return cs
 }
 
-func FindClientSessionByToken(deps *utils.Deps, token string) (*ClientSession, error) {
-	entCS, err := deps.EntClient.ClientSession.Query().
-		Where(clientsession.TokenEQ(token)).
-		Only(deps.Ctx)
+func FindClientSessionByToken(deps *utils.Deps, token string, preload ...ClientSessionPreload) (*ClientSession, error) {
+	q := deps.EntClient.ClientSession.Query().Where(clientsession.TokenEQ(token))
+
+	for _, p := range preload {
+		switch p {
+		case ClientSessionPreloadUser:
+			q.WithUser()
+		}
+	}
+
+	entCS, err := q.Only(deps.Ctx)
 	if err != nil {
 		return nil, err
 	}
 
 	cs := NewClientSessionFromEnt(entCS, nil)
 	return cs, nil
-}
-
-func (cs *ClientSession) LoadUser(deps *utils.Deps) error {
-	entUser, err := deps.EntClient.ClientSession.QueryUser(cs.EntClientSession).Only(deps.Ctx)
-	if err != nil {
-		return err
-	}
-
-	cs.User = NewUserFromEnt(entUser)
-	return nil
 }
